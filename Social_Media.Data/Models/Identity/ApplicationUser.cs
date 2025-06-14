@@ -31,7 +31,8 @@ namespace Social_Media.Data.Identity
         public bool IsBlocked { get; set; } = false;
 
         #region Relation Between ApplicationUser & Other Classes
-        public virtual ICollection<Post>? Posts { get; set; }
+        public virtual ICollection<TextPost>? TextPosts { get; set; }
+        public virtual ICollection<ImageOrVideoPost>? ImageOrVideoPost { get; set; }
         public virtual ICollection<Comment>? Comments { get; set; }
         public virtual ICollection<InteractionWithPost>? InteractionsWithPost { get; set; }
         public virtual ICollection<InteractionWithComment>? InteractionsWithComment { get; set; }

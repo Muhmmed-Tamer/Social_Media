@@ -14,7 +14,8 @@ namespace Social_Media.Data.Models.Notifications.Interactions_Notifications
         public DateTime SendAt { get; set; } = DateTime.Now;
         [ForeignKey("Post")]
         public int PostId { get; set; }
-        public virtual Post? Post { get; set; }
+        public virtual TextPost? TextPost { get; set; }
+        public virtual ImageOrVideoPost? ImageOrVideoPost { get; set; }
         public virtual ApplicationUser? User { get; set; }
     }
 }

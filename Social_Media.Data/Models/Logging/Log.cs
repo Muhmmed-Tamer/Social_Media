@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Social_Media.Data.Models.Logging
 {
+    [NotMapped]
     public class Log
     {
         [Key]
@@ -14,9 +16,6 @@ namespace Social_Media.Data.Models.Logging
         public string? Properties { get; set; }
         public string? UserId { get; set; }
         public string? Method { get; set; }
-        public string? IpAddress
-        {
-            get; set;
-        }
+        public string? IpAddress { get; set; }
     }
 }

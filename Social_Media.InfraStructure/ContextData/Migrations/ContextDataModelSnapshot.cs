@@ -281,10 +281,16 @@ namespace Social_Media.InfraStructure.ContextData.Migrations
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("datetimeoffset");
 
+                    b.Property<int?>("ImageOrVideoPostId")
+                        .HasColumnType("int");
+
                     b.Property<int>("InteractionBy")
                         .HasColumnType("int");
 
                     b.Property<int?>("PostId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TextPostId")
                         .HasColumnType("int");
 
                     b.Property<string>("UserId")
@@ -293,7 +299,9 @@ namespace Social_Media.InfraStructure.ContextData.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PostId");
+                    b.HasIndex("ImageOrVideoPostId");
+
+                    b.HasIndex("TextPostId");
 
                     b.HasIndex("UserId");
 
@@ -403,6 +411,9 @@ namespace Social_Media.InfraStructure.ContextData.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("ImageOrVideoPostId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsRead")
                         .HasColumnType("bit");
 
@@ -412,13 +423,18 @@ namespace Social_Media.InfraStructure.ContextData.Migrations
                     b.Property<DateTime>("SendAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("TextPostId")
+                        .HasColumnType("int");
+
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PostId");
+                    b.HasIndex("ImageOrVideoPostId");
+
+                    b.HasIndex("TextPostId");
 
                     b.HasIndex("UserId");
 
@@ -493,6 +509,9 @@ namespace Social_Media.InfraStructure.ContextData.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("ImageOrVideoPostId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsRead")
                         .HasColumnType("bit");
 
@@ -502,13 +521,18 @@ namespace Social_Media.InfraStructure.ContextData.Migrations
                     b.Property<DateTime>("SendAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("TextPostId")
+                        .HasColumnType("int");
+
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PostId");
+                    b.HasIndex("ImageOrVideoPostId");
+
+                    b.HasIndex("TextPostId");
 
                     b.HasIndex("UserId");
 
@@ -526,11 +550,17 @@ namespace Social_Media.InfraStructure.ContextData.Migrations
                     b.Property<DateTimeOffset>("AddStoryAt")
                         .HasColumnType("datetimeoffset");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("Privacy")
                         .HasColumnType("int");
 
                     b.Property<DateTimeOffset>("RemovedAt")
                         .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("StoryPath")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -629,6 +659,38 @@ namespace Social_Media.InfraStructure.ContextData.Migrations
                     b.ToTable("Friends");
                 });
 
+            modelBuilder.Entity("Social_Media.Models.ImageOrVideoPost", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Caption")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("ImageOrVideoPath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Privacy")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ImageOrVideoPosts");
+                });
+
             modelBuilder.Entity("Social_Media.Models.Message", b =>
                 {
                     b.Property<int>("Id")
@@ -664,7 +726,7 @@ namespace Social_Media.InfraStructure.ContextData.Migrations
                     b.ToTable("Messages");
                 });
 
-            modelBuilder.Entity("Social_Media.Models.Post", b =>
+            modelBuilder.Entity("Social_Media.Models.TextPost", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -672,19 +734,14 @@ namespace Social_Media.InfraStructure.ContextData.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Caption")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Content")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTimeOffset>("CreatedDate")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<int>("Privacy")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Type")
                         .HasColumnType("int");
 
                     b.Property<string>("UserId")
@@ -695,7 +752,7 @@ namespace Social_Media.InfraStructure.ContextData.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Posts");
+                    b.ToTable("TextPosts");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -761,12 +818,12 @@ namespace Social_Media.InfraStructure.ContextData.Migrations
                                 .HasMaxLength(100)
                                 .HasColumnType("nvarchar(100)");
 
-                            b1.Property<string>("FirstNameInArabic")
+                            b1.Property<string>("FirstNameInEnglish")
+                                .IsRequired()
                                 .HasMaxLength(100)
                                 .HasColumnType("nvarchar(100)");
 
-                            b1.Property<string>("FirstNameInEnglish")
-                                .IsRequired()
+                            b1.Property<string>("LastNameInArabic")
                                 .HasMaxLength(100)
                                 .HasColumnType("nvarchar(100)");
 
@@ -804,9 +861,13 @@ namespace Social_Media.InfraStructure.ContextData.Migrations
 
             modelBuilder.Entity("Social_Media.Data.Models.Interactions.InteractionWithPost", b =>
                 {
-                    b.HasOne("Social_Media.Models.Post", "Post")
+                    b.HasOne("Social_Media.Models.ImageOrVideoPost", "ImageOrVideoPost")
                         .WithMany()
-                        .HasForeignKey("PostId");
+                        .HasForeignKey("ImageOrVideoPostId");
+
+                    b.HasOne("Social_Media.Models.TextPost", "TextPost")
+                        .WithMany()
+                        .HasForeignKey("TextPostId");
 
                     b.HasOne("Social_Media.Data.Identity.ApplicationUser", "User")
                         .WithMany("InteractionsWithPost")
@@ -814,7 +875,9 @@ namespace Social_Media.InfraStructure.ContextData.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Post");
+                    b.Navigation("ImageOrVideoPost");
+
+                    b.Navigation("TextPost");
 
                     b.Navigation("User");
                 });
@@ -880,11 +943,13 @@ namespace Social_Media.InfraStructure.ContextData.Migrations
 
             modelBuilder.Entity("Social_Media.Data.Models.Notifications.Interactions_Notifications.InteractionNotificationByPost", b =>
                 {
-                    b.HasOne("Social_Media.Models.Post", "Post")
+                    b.HasOne("Social_Media.Models.ImageOrVideoPost", "ImageOrVideoPost")
                         .WithMany("InteractionNotificationByPosts")
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ImageOrVideoPostId");
+
+                    b.HasOne("Social_Media.Models.TextPost", "TextPost")
+                        .WithMany("InteractionNotificationByPosts")
+                        .HasForeignKey("TextPostId");
 
                     b.HasOne("Social_Media.Data.Identity.ApplicationUser", "User")
                         .WithMany("InteractionNotificationByPosts")
@@ -892,7 +957,9 @@ namespace Social_Media.InfraStructure.ContextData.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Post");
+                    b.Navigation("ImageOrVideoPost");
+
+                    b.Navigation("TextPost");
 
                     b.Navigation("User");
                 });
@@ -937,11 +1004,13 @@ namespace Social_Media.InfraStructure.ContextData.Migrations
 
             modelBuilder.Entity("Social_Media.Data.Models.Notifications.PostNotification", b =>
                 {
-                    b.HasOne("Social_Media.Models.Post", "Post")
+                    b.HasOne("Social_Media.Models.ImageOrVideoPost", "ImageOrVideoPost")
                         .WithMany()
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ImageOrVideoPostId");
+
+                    b.HasOne("Social_Media.Models.TextPost", "TextPost")
+                        .WithMany()
+                        .HasForeignKey("TextPostId");
 
                     b.HasOne("Social_Media.Data.Identity.ApplicationUser", "User")
                         .WithMany("PostNotifications")
@@ -949,7 +1018,9 @@ namespace Social_Media.InfraStructure.ContextData.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Post");
+                    b.Navigation("ImageOrVideoPost");
+
+                    b.Navigation("TextPost");
 
                     b.Navigation("User");
                 });
@@ -978,7 +1049,13 @@ namespace Social_Media.InfraStructure.ContextData.Migrations
 
             modelBuilder.Entity("Social_Media.Models.Comment", b =>
                 {
-                    b.HasOne("Social_Media.Models.Post", "Post")
+                    b.HasOne("Social_Media.Models.ImageOrVideoPost", "ImageOrVideoPost")
+                        .WithMany("Comments")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Social_Media.Models.TextPost", "TextPost")
                         .WithMany("Comments")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -990,7 +1067,9 @@ namespace Social_Media.InfraStructure.ContextData.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Post");
+                    b.Navigation("ImageOrVideoPost");
+
+                    b.Navigation("TextPost");
 
                     b.Navigation("User");
                 });
@@ -1014,6 +1093,17 @@ namespace Social_Media.InfraStructure.ContextData.Migrations
                     b.Navigation("MainUser");
                 });
 
+            modelBuilder.Entity("Social_Media.Models.ImageOrVideoPost", b =>
+                {
+                    b.HasOne("Social_Media.Data.Identity.ApplicationUser", "User")
+                        .WithMany("ImageOrVideoPost")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Social_Media.Models.Message", b =>
                 {
                     b.HasOne("Social_Media.Data.Identity.ApplicationUser", "ReceiverUser")
@@ -1033,10 +1123,10 @@ namespace Social_Media.InfraStructure.ContextData.Migrations
                     b.Navigation("SenderUser");
                 });
 
-            modelBuilder.Entity("Social_Media.Models.Post", b =>
+            modelBuilder.Entity("Social_Media.Models.TextPost", b =>
                 {
                     b.HasOne("Social_Media.Data.Identity.ApplicationUser", "User")
-                        .WithMany("Posts")
+                        .WithMany("TextPosts")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -1054,6 +1144,8 @@ namespace Social_Media.InfraStructure.ContextData.Migrations
 
                     b.Navigation("FriendshipsReceived");
 
+                    b.Navigation("ImageOrVideoPost");
+
                     b.Navigation("InteractionNotificationByComments");
 
                     b.Navigation("InteractionNotificationByPosts");
@@ -1070,13 +1162,13 @@ namespace Social_Media.InfraStructure.ContextData.Migrations
 
                     b.Navigation("PostNotifications");
 
-                    b.Navigation("Posts");
-
                     b.Navigation("ReceiveMessages");
 
                     b.Navigation("SentMessages");
 
                     b.Navigation("Stories");
+
+                    b.Navigation("TextPosts");
 
                     b.Navigation("UserConnections");
                 });
@@ -1093,7 +1185,14 @@ namespace Social_Media.InfraStructure.ContextData.Migrations
                     b.Navigation("likes");
                 });
 
-            modelBuilder.Entity("Social_Media.Models.Post", b =>
+            modelBuilder.Entity("Social_Media.Models.ImageOrVideoPost", b =>
+                {
+                    b.Navigation("Comments");
+
+                    b.Navigation("InteractionNotificationByPosts");
+                });
+
+            modelBuilder.Entity("Social_Media.Models.TextPost", b =>
                 {
                     b.Navigation("Comments");
 

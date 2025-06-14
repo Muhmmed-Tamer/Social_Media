@@ -12,14 +12,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Posts\Commands\Handlers\" />
-    <Folder Include="Features\Posts\Commands\Models\" />
     <Folder Include="Features\Posts\Commands\Validators\" />
     <Folder Include="Features\Posts\Queries\Handlers\" />
     <Folder Include="Features\Posts\Queries\Models\" />
     <Folder Include="Features\Posts\Queries\Results\" />
-    <Folder Include="Mapping\" />
-    <Folder Include="Resources\" />
+    <Folder Include="Features\Users\Commands\Validators\" />
+    <Folder Include="Features\Users\Queries\Handlers\" />
+    <Folder Include="Features\Users\Queries\Models\" />
+    <Folder Include="Features\Users\Queries\Results\" />
+    <Folder Include="Mapping\Post Mapping\Post Mapping Queries\" />
+    <Folder Include="Mapping\User Mapping\User Mapping Queries\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,6 +33,13 @@
     <PackageReference Include="Serilog.Enrichers.Thread" Version="4.0.0" />
     <PackageReference Include="Serilog.Settings.Configuration" Version="9.0.0" />
     <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="8.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\SharedResource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SharedResource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

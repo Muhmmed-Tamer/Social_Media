@@ -28,4 +28,10 @@
     <ProjectReference Include="..\Social_Media.Core\Social_Media.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\Posts\Images\" />
+    <Folder Include="wwwroot\Posts\Videos\" />
+    <Folder Include="wwwroot\Users\ImageOFProfile\" />
+  </ItemGroup>
+
 </Project>

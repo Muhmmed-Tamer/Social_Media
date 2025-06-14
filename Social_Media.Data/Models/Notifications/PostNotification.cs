@@ -16,6 +16,7 @@ namespace Social_Media.Data.Models.Notifications
         public int PostId { get; set; }
 
         public virtual ApplicationUser? User { get; set; }
-        public virtual Post? Post { get; set; }
+        public virtual TextPost? TextPost { get; set; }
+        public virtual ImageOrVideoPost? ImageOrVideoPost { get; set; }
     }
 }

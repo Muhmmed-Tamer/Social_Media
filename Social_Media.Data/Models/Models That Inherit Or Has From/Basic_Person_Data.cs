@@ -13,6 +13,6 @@ namespace Social_Media.Data.Models.Models_That_Inherit_From
         [MaxLength(100)]
         public string FirstNameInAabic { get; set; }
         [MaxLength(100)]
-        public string? FirstNameInArabic { get; set; }
+        public string? LastNameInArabic { get; set; }
     }
 }

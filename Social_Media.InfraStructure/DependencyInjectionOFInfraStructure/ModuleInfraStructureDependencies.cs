@@ -1,12 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Social_Media.Data.Models.Interactions;
+using Social_Media.Data.Models.Notifications;
+using Social_Media.Data.Models.Notifications.Interactions_Notifications;
 using Social_Media.InfraStructure.AbstractsRepositories;
-using Social_Media.InfraStructure.AbstractsRepositories.INotificationsRepository.InteractionsNotificationsRepository;
-using Social_Media.InfraStructure.AbstractsRepositories.InteractionsRepository;
-using Social_Media.InfraStructure.AbstractsRepositories.Notifications;
 using Social_Media.InfraStructure.ImplementationRepositories;
-using Social_Media.InfraStructure.ImplementationRepositories.NotificationsRepository;
-using Social_Media.InfraStructure.ImplementationRepositories.NotificationsRepository.InteractionsNotificationsRepository;
-using Social_Media.Repository;
+using Social_Media.Models;
 
 namespace Social_Media.InfraStructure.DependencyInjectionOFInfraStructure
 {
@@ -14,27 +12,28 @@ namespace Social_Media.InfraStructure.DependencyInjectionOFInfraStructure
     {
         public static void AddInfraStructureDependencies(this IServiceCollection Services)
         {
-            Services.AddScoped<ICommentRepository, CommentRepository>();
-            Services.AddScoped<IFriendRepository, FriendRepository>();
-            Services.AddScoped<IPostRepository, PostRepository>();
-            Services.AddScoped<IPostNotificationRepository, PostNotificationRepository>();
-            Services.AddScoped<IMessageRepository, MessageRepository>();
+            Services.AddScoped<IRepository<Comment>, Repository<Comment>>();
+            Services.AddScoped<IRepository<Friend>, Repository<Friend>>();
+            Services.AddScoped<IRepository<TextPost>, Repository<TextPost>>();
+            Services.AddScoped<IRepository<ImageOrVideoPost>, Repository<ImageOrVideoPost>>();
+            Services.AddScoped<IRepository<PostNotification>, Repository<PostNotification>>();
+            Services.AddScoped<IRepository<Message>, Repository<Message>>();
 
             #region Notifications
-            Services.AddScoped<IMessageNotificationRepository, MessageNotificationRepository>();
-            Services.AddScoped<IFriendRequestNotificationRepository, FriendRequestNotificationRepository>();
-            Services.AddScoped<IMessageNotificationRepository, MessageNotificationRepository>();
+            Services.AddScoped<IRepository<MessageNotification>, Repository<MessageNotification>>();
+            Services.AddScoped<IRepository<FriendRequestNotification>, Repository<FriendRequestNotification>>();
+            Services.AddScoped<IRepository<MessageNotification>, Repository<MessageNotification>>();
             #endregion
 
             #region Interactions
-            Services.AddScoped<IInteractionWithCommentRepository, IInteractionWithCommentRepository>();
-            Services.AddScoped<IInteractionWithPostRepository, IInteractionWithPostRepository>();
-            Services.AddScoped<IInteractionWithStoryRepository, IInteractionWithStoryRepository>();
+            Services.AddScoped<IRepository<InteractionWithComment>, Repository<InteractionWithComment>>();
+            Services.AddScoped<IRepository<InteractionWithPost>, Repository<InteractionWithPost>>();
+            Services.AddScoped<IRepository<InteractionWithStory>, Repository<InteractionWithStory>>();
             #endregion
 
-            Services.AddScoped<IInteractionNotificationByPostRepository, InteractionNotificationByPostRepository>();
-            Services.AddScoped<IInteractionNotificationByCommentRepository, InteractionNotificationByCommentRepository>();
-            Services.AddScoped<IInteractionNotificationByStoryRepository, InteractionNotificationByStoryRepository>();
+            Services.AddScoped<IRepository<InteractionNotificationByPost>, Repository<InteractionNotificationByPost>>();
+            Services.AddScoped<IRepository<InteractionNotificationByComment>, Repository<InteractionNotificationByComment>>();
+            Services.AddScoped<IRepository<InteractionNotificationByStory>, Repository<InteractionNotificationByStory>>();
         }
     }
 }

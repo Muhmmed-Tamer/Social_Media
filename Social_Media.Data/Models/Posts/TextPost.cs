@@ -6,14 +6,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Social_Media.Models
 {
 
-    public class Post
+    public class TextPost
     {
         public int Id { get; set; }
-        public string? Caption { get; set; }
-
-        public string? Content { get; set; }
-
-        public PostType Type { get; set; }
+        public string Content { get; set; }
 
         [ForeignKey("User")]
         public string UserId { get; set; }

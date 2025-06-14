@@ -10,6 +10,9 @@ namespace Social_Media.Data.Models
         public int Id { get; set; }
         public DateTimeOffset AddStoryAt { get; set; } = DateTimeOffset.UtcNow;
         public DateTimeOffset RemovedAt { get; set; } = DateTimeOffset.UtcNow.AddDays(1);
+        public string? StoryPath { get; set; }
+        public string? Description { get; set; }
+        public bool IsRemoved => DateTimeOffset.UtcNow >= RemovedAt;
         [ForeignKey("User")]
         public string UserId { get; set; }
         public Privacy Privacy { get; set; }

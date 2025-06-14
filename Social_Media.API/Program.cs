@@ -1,9 +1,12 @@
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using SchoolProject.Core.DependencyInjectionOFCore;
 using Serilog;
 using Social_Media.Data;
 using Social_Media.Data.Identity;
+using Social_Media.InfraStructure.DependencyInjectionOFInfraStructure;
+using Social_Media.Services.DependencyInjectionOFServices;
 
 namespace Social_Media.API
 {
@@ -27,10 +30,30 @@ namespace Social_Media.API
             var Config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
             Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(Config).CreateLogger();
 
-            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(Options =>
-            {
+            builder.Services.AddCoreDependencies();
+            builder.Services.AddInfraStructureDependencies();
+            builder.Services.AddServiceDependencies();
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(
+               Options =>
+               {
+                   //Must Change When Deploying
+                   //Password Settings
+                   Options.Password.RequireNonAlphanumeric = false;
+                   Options.Password.RequireUppercase = false;
+                   Options.Password.RequireLowercase = false;
+                   Options.Password.RequireDigit = false;
+                   Options.Password.RequiredUniqueChars = 0;
+                   Options.Password.RequiredLength = 4;
+                   //LockOut Setting
+                   Options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+                   Options.Lockout.MaxFailedAccessAttempts = 5;
+                   Options.Lockout.AllowedForNewUsers = true;
+                   //User Settings
+                   Options.User.RequireUniqueEmail = true;
+                   Options.SignIn.RequireConfirmedAccount = true;
+               }).AddEntityFrameworkStores<ContextData>()
+               .AddDefaultTokenProviders();
 
-            }).AddEntityFrameworkStores<ContextData>();
             var app = builder.Build();
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

@@ -37,7 +37,8 @@ namespace Social_Media.Data
         public virtual DbSet<InteractionNotificationByComment> InteractionNotificationByComments { get; set; }
         public virtual DbSet<InteractionNotificationByPost> InteractionNotificationByPosts { get; set; }
         public virtual DbSet<InteractionNotificationByStory> InteractionNotificationByStories { get; set; }
-        public virtual DbSet<Post> Posts { get; set; }
+        public virtual DbSet<TextPost> TextPosts { get; set; }
+        public virtual DbSet<ImageOrVideoPost> ImageOrVideoPosts { get; set; }
         public virtual DbSet<UserConnection> UserConnections { get; set; }
         public virtual DbSet<Log> Logs { get; set; }
         #endregion

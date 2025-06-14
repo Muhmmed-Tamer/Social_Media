@@ -18,7 +18,8 @@ namespace Social_Media.Models
         [ForeignKey("Post")]
         public int PostId { get; set; }
         // Properties  that help in RelationShips
-        public virtual Post? Post { get; set; }
+        public virtual TextPost? TextPost { get; set; }
+        public virtual ImageOrVideoPost? ImageOrVideoPost { get; set; }
         public virtual ApplicationUser? User { get; set; }
         public virtual List<InteractionWithComment>? likes { get; set; }
         public virtual ICollection<InteractionNotificationByComment>? InteractionNotificationByComments { get; set; }
