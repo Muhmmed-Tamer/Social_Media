@@ -1,4 +1,7 @@
 ﻿using AutoMapper;
+using ConstantStatementInAllProject.Files;
+using ConstantStatementInAllProject.Files.Posts;
+using ConstantStatementInAllProject.Files.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Social_Media.Core.Abstracts_UnitOFWork;
@@ -9,6 +12,7 @@ using Social_Media.Services.AbstractsServices;
 using Social_Media.Services.AbstractsServices.InteractionsServices;
 using Social_Media.Services.AbstractsServices.PostsServices;
 using Social_Media.Services.AbstractsServicesOFSpecialModels;
+using Social_Media.Services.AbstractsServicesOFSpecialModels.FileConfigurations;
 
 namespace Social_Media.Core.Implementation_UnitOFWork
 {
@@ -50,12 +54,22 @@ namespace Social_Media.Core.Implementation_UnitOFWork
         public ITextPostServices TextPostServices { get; }
 
         public IImageOrVideoPostServices ImageOrVideoPostServices { get; }
+
+        public IImageOrVideoPathServices ImageOrVideoPathServices { get; }
+
+        public IFileConfigurationServices<ConfigurationOFPostImageServices> ConfigurationOFPostImageServices { get; }
+
+        public IFileConfigurationServices<ConfigurationOFPostVideoServices> ConfigurationOFPostVideoServices { get; }
+
+        public IFileConfigurationServices<ConfigurationOFUserImageServices> ConfigurationOFUserImageServices { get; }
         #endregion
         #region Constructor 
         public UnitOFWork(UserManager<ApplicationUser> ManagerUser, RoleManager<IdentityRole> ManagerRole, IFileService FileServices, ITextPostServices TextPostServices,
             IMessageServices MessageServices, IFriendServices FriendServices, IInteractionWithStoryServices InteractionWithStoryServices, IInteractionWithPostServices InteractionWithPostServices, IInteractionWithCommentServices InteractionWithCommentServices,
             IPostNotificationServices PostNotificationServices, IMessageNotificationServices MessageNotificationServices, IFriendRequestNotificationServices FriendRequestNotificationServices, IInteractionNotificationByStoryServices InteractionNotificationByStoryServices,
-            IInteractionNotificationByPostServices InteractionNotificationByPostServices, IInteractionNotificationByCommentServices InteractionNotificationByCommentServices, IConfiguration Configuration, IMapper Mapper, IImageOrVideoPostServices ImageOrVideoPostServices
+            IInteractionNotificationByPostServices InteractionNotificationByPostServices, IInteractionNotificationByCommentServices InteractionNotificationByCommentServices, IConfiguration Configuration, IMapper Mapper, IImageOrVideoPostServices ImageOrVideoPostServices,
+            IImageOrVideoPathServices ImageOrVideoPathServices, IFileConfigurationServices<ConfigurationOFPostImageServices> ConfigurationOFPostImageServices, IFileConfigurationServices<ConfigurationOFPostVideoServices> ConfigurationOFPostVideoServices,
+            IFileConfigurationServices<ConfigurationOFUserImageServices> ConfigurationOFUserImageServices
             )
         {
             this.ManagerUser = ManagerUser;
@@ -74,7 +88,11 @@ namespace Social_Media.Core.Implementation_UnitOFWork
             this.InteractionNotificationByStoryServices = InteractionNotificationByStoryServices;
             this.InteractionNotificationByPostServices = InteractionNotificationByPostServices;
             this.InteractionNotificationByCommentServices = InteractionNotificationByCommentServices;
+            this.ImageOrVideoPathServices = ImageOrVideoPathServices;
             this.Configuration = Configuration;
+            this.ConfigurationOFPostImageServices = ConfigurationOFPostImageServices;
+            this.ConfigurationOFPostVideoServices = ConfigurationOFPostVideoServices;
+            this.ConfigurationOFUserImageServices = ConfigurationOFUserImageServices;
             this.Mapper = Mapper;
         }
         #endregion

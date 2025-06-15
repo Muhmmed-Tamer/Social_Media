@@ -23,11 +23,14 @@ namespace SchoolProject.Core.DependencyInjectionOFCore
             Services.AddAutoMapper(Assembly.GetExecutingAssembly());
             Services.AddScoped<IUnitOFWork, UnitOFWork>();
 
-            #region Registration OF Post and Message and Friend
-            Services.AddScoped<ITextPostServices, TextPostServices>();
-            Services.AddScoped<IImageOrVideoPostServices, ImageOrVideoPostServices>();
+            #region Registration OF  Message and Friend            
             Services.AddScoped<IMessageServices, MessageServices>();
             Services.AddScoped<IFriendServices, FriendServices>();
+            #endregion
+            #region Posts
+            Services.AddScoped<ITextPostServices, TextPostServices>();
+            Services.AddScoped<IImageOrVideoPostServices, ImageOrVideoPostServices>();
+            Services.AddScoped<IImageOrVideoPathServices, ImageOrVideoPathServices>();
             #endregion
             #region Registration OF Interactions
             Services.AddScoped<IInteractionWithStoryServices, InteractionWithStoryServices>();

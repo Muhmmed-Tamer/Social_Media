@@ -33,7 +33,7 @@ namespace Social_Media.API.Controllers
         {
             try
             {
-                var Result = await Mediator.Send(new AddImageOrVideoPostCommand(addImageOrVideoPostCommandFromUser.Post_Title, addImageOrVideoPostCommandFromUser.UserId_That_Want_To_AddPost, addImageOrVideoPostCommandFromUser.Post_Privacy, addImageOrVideoPostCommandFromUser.ImageOrVideo));
+                var Result = await Mediator.Send(new AddImageOrVideoPostCommand(addImageOrVideoPostCommandFromUser.Post_Title, addImageOrVideoPostCommandFromUser.UserId_That_Want_To_AddPost, addImageOrVideoPostCommandFromUser.Post_Privacy, addImageOrVideoPostCommandFromUser.ImageOrVideos));
                 return New_Result(Result);
             }
             catch (Exception ex)

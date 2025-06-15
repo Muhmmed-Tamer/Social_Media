@@ -2,6 +2,7 @@
 using Social_Media.Data.Models.Interactions;
 using Social_Media.Data.Models.Notifications;
 using Social_Media.Data.Models.Notifications.Interactions_Notifications;
+using Social_Media.Data.Models.Posts;
 using Social_Media.InfraStructure.AbstractsRepositories;
 using Social_Media.InfraStructure.ImplementationRepositories;
 using Social_Media.Models;
@@ -14,10 +15,14 @@ namespace Social_Media.InfraStructure.DependencyInjectionOFInfraStructure
         {
             Services.AddScoped<IRepository<Comment>, Repository<Comment>>();
             Services.AddScoped<IRepository<Friend>, Repository<Friend>>();
-            Services.AddScoped<IRepository<TextPost>, Repository<TextPost>>();
-            Services.AddScoped<IRepository<ImageOrVideoPost>, Repository<ImageOrVideoPost>>();
             Services.AddScoped<IRepository<PostNotification>, Repository<PostNotification>>();
             Services.AddScoped<IRepository<Message>, Repository<Message>>();
+
+            #region Posts
+            Services.AddScoped<IRepository<TextPost>, Repository<TextPost>>();
+            Services.AddScoped<IRepository<ImageOrVideoPost>, Repository<ImageOrVideoPost>>();
+            Services.AddScoped<IRepository<ImageOrVideoPath>, Repository<ImageOrVideoPath>>();
+            #endregion
 
             #region Notifications
             Services.AddScoped<IRepository<MessageNotification>, Repository<MessageNotification>>();
@@ -31,9 +36,11 @@ namespace Social_Media.InfraStructure.DependencyInjectionOFInfraStructure
             Services.AddScoped<IRepository<InteractionWithStory>, Repository<InteractionWithStory>>();
             #endregion
 
+            #region Interactions Notifications
             Services.AddScoped<IRepository<InteractionNotificationByPost>, Repository<InteractionNotificationByPost>>();
             Services.AddScoped<IRepository<InteractionNotificationByComment>, Repository<InteractionNotificationByComment>>();
             Services.AddScoped<IRepository<InteractionNotificationByStory>, Repository<InteractionNotificationByStory>>();
+            #endregion
         }
     }
 }

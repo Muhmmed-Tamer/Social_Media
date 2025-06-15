@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using ConstantStatementInAllProject.Files;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Social_Media.Services.AbstractsServicesOFSpecialModels;
@@ -30,7 +31,7 @@ namespace Social_Media.Services.ImplementationServicesOFSpecialModels
             }
             catch (Exception ex)
             {
-                Logger.LogWarning(ex.Message);
+                Logger.LogError(ex.Message);
                 return Task.FromResult(false);
             }
         }
@@ -40,26 +41,127 @@ namespace Social_Media.Services.ImplementationServicesOFSpecialModels
             try
             {
                 string ExtensionOFFile = Path.GetExtension(File.FileName);
-                if (File.Length <= MaxSize & File.Length > 0 & AllowedExtension.Contains(ExtensionOFFile))
+                if (AllowedExtension.Contains(ExtensionOFFile))
                 {
-                    string NewFileName = Guid.NewGuid().ToString().Replace("-", string.Empty);
-                    string CurrentFileName = File.Name;
-                    CurrentFileName = string.Concat(NewFileName, ExtensionOFFile);
-                    string FullPathOfDirectory = Path.Combine(Hosting.WebRootPath, DirectoryThatStoreFileIn);
-                    string FullPathOfFileOFImage = Path.Combine(Hosting.WebRootPath, DirectoryThatStoreFileIn, CurrentFileName);
-                    if (!Directory.Exists(FullPathOfDirectory))
+                    if (File.Length <= MaxSize & File.Length > 0)
                     {
-                        Directory.CreateDirectory(FullPathOfDirectory);
+                        string CurrentFileName = await GenerateNewFileNameAndExtension(File, ExtensionOFFile, DirectoryThatStoreFileIn);
+                        return (CurrentFileName, true);
                     }
-                    await File.CopyToAsync(new FileStream(FullPathOfFileOFImage, FileMode.Create));
-                    return (CurrentFileName, true);
+                    return (FilesConstants.ErrorSizeFile, false);
                 }
-                return (string.Empty, false);
+                return (FilesConstants.ErrorExtensionFile, false);
             }
             catch (Exception ex)
             {
-                Logger.LogWarning("");
+                Logger.LogWarning(ex.Message);
                 return (ex.Message, false);
+            }
+        }
+
+        public async Task<(List<string>, bool)> GeneratePathOFFiles(List<IFormFile> Files, long MaxSize, string[] AllowedExtension, string DirectoryThatStoreFileIn)
+        {
+            try
+            {
+                List<string> FilePaths = new();
+                foreach (var SingleFile in Files)
+                {
+                    string ExtensionOFFile = Path.GetExtension(SingleFile.FileName);
+                    if (AllowedExtension.Contains(ExtensionOFFile))
+                    {
+                        if (SingleFile.Length <= MaxSize && SingleFile.Length > 0)
+                        {
+                            string CurrentFileName = await GenerateNewFileNameAndExtension(SingleFile, ExtensionOFFile, DirectoryThatStoreFileIn);
+                            FilePaths.Add(CurrentFileName);
+                        }
+                        else
+                        {
+                            FilePaths.Add(FilesConstants.ErrorSizeFiles);
+                        }
+                    }
+                    FilePaths.Add(FilesConstants.ErrorExtensionFiles);
+                    return (FilePaths, false);
+                }
+                return (FilePaths, true);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogWarning(ex.Message);
+                return (new List<string>() { ex.Message }, false);
+            }
+        }
+
+        public async Task<(List<string>, bool)> GeneratePathOFFiles(List<IFormFile> Files, long MaxSize, string[] AllowedExtension, string DirectoryThatStoreFileIn, long OtherMaxSize, string OtherDirectoryThatStoreFileIn, string[] OtherAllowedExtension)
+        {
+            try
+            {
+                List<string> FilePaths = new();
+                foreach (var SingleFile in Files)
+                {
+                    string ExtensionOFFile = Path.GetExtension(SingleFile.FileName);
+                    if (AllowedExtension.Contains(ExtensionOFFile))
+                    {
+                        if (SingleFile.Length <= MaxSize && SingleFile.Length > 0)
+                        {
+                            string CurrentFileName = await GenerateNewFileNameAndExtension(SingleFile, ExtensionOFFile, DirectoryThatStoreFileIn);
+                            FilePaths.Add(CurrentFileName);
+                        }
+                        else
+                        {
+                            FilePaths.Add(FilesConstants.ErrorSizeFiles);
+                            return (FilePaths, false);
+                        }
+                    }
+                    else if (OtherAllowedExtension.Contains(ExtensionOFFile))
+                    {
+                        if (SingleFile.Length <= OtherMaxSize && SingleFile.Length > 0)
+                        {
+                            string CurrentFileName = await GenerateNewFileNameAndExtension(SingleFile, ExtensionOFFile, OtherDirectoryThatStoreFileIn);
+                            FilePaths.Add(CurrentFileName);
+                        }
+                        else
+                        {
+                            FilePaths.Add(FilesConstants.ErrorSizeFiles);
+                            return (FilePaths, false);
+                        }
+                    }
+                    else
+                    {
+                        FilePaths.Add(FilesConstants.ErrorExtensionFiles);
+                        return (FilePaths, false);
+                    }
+                }
+                return (FilePaths, true);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogWarning(ex.Message);
+                return (new List<string>() { ex.Message }, false);
+            }
+        }
+        private async Task<string> GenerateNewFileNameAndExtension(IFormFile FileData, string ExtensionOFFile, string DirectoryThatStoreFileIn)
+        {
+            try
+            {
+                string NewFileName = Guid.NewGuid().ToString().Replace("-", string.Empty);
+                string CurrentFileName = FileData.Name;
+                CurrentFileName = string.Concat(NewFileName, ExtensionOFFile);
+                string FullPathOfDirectory = Path.Combine(Hosting.WebRootPath, DirectoryThatStoreFileIn);
+                string FullPathOfFileOFImage = Path.Combine(Hosting.WebRootPath, DirectoryThatStoreFileIn, CurrentFileName);
+                if (!Directory.Exists(FullPathOfDirectory))
+                {
+                    Directory.CreateDirectory(FullPathOfDirectory);
+                }
+                using (var stream = new FileStream(FullPathOfFileOFImage, FileMode.Create))
+                {
+                    await FileData.CopyToAsync(stream);
+                }
+                return CurrentFileName;
+            }
+            catch (Exception ex)
+            {
+                Logger.LogWarning(ex.Message);
+                return ex.Message;
             }
         }
     }

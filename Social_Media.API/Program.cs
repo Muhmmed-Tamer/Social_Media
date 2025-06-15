@@ -30,6 +30,8 @@ namespace Social_Media.API
             var Config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
             Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(Config).CreateLogger();
 
+            builder.Services.AddSignalR();
+
             builder.Services.AddCoreDependencies();
             builder.Services.AddInfraStructureDependencies();
             builder.Services.AddServiceDependencies();
@@ -65,7 +67,7 @@ namespace Social_Media.API
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
+            app.MapHub<>("");// Specify the hub you want to use, e.g., app.MapHub<ChatHub>("/chatHub");
 
             app.MapControllers();
             app.Run();

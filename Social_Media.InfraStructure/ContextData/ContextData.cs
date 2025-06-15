@@ -6,6 +6,7 @@ using Social_Media.Data.Models.Interactions;
 using Social_Media.Data.Models.Logging;
 using Social_Media.Data.Models.Notifications;
 using Social_Media.Data.Models.Notifications.Interactions_Notifications;
+using Social_Media.Data.Models.Posts;
 using Social_Media.Models;
 using System.Reflection;
 
@@ -40,6 +41,7 @@ namespace Social_Media.Data
         public virtual DbSet<TextPost> TextPosts { get; set; }
         public virtual DbSet<ImageOrVideoPost> ImageOrVideoPosts { get; set; }
         public virtual DbSet<UserConnection> UserConnections { get; set; }
+        public virtual DbSet<ImageOrVideoPath> ImageOrVideoPaths { get; set; }
         public virtual DbSet<Log> Logs { get; set; }
         #endregion
     }

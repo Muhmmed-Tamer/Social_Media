@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.Logging;
 using Social_Media.InfraStructure.AbstractsRepositories;
 using Social_Media.Services.AbstractsServices;
 
@@ -23,6 +24,41 @@ namespace Social_Media.Services.ImplementationServices
             {
                 Logger.LogWarning("");
                 return Task.CompletedTask;
+            }
+        }
+
+        public async Task CommitTransaction(IDbContextTransaction Transaction)
+        {
+            try
+            {
+                await Repository.CommitTransaction(Transaction);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogWarning("");
+            }
+        }
+        Task<IDbContextTransaction> IRepository<T>.BeginTransaction()
+        {
+            try
+            {
+                return Repository.BeginTransaction();
+            }
+            catch (Exception ex)
+            {
+                Logger.LogWarning(ex.Message);
+                throw;
+            }
+        }
+        public async Task RollbackTransaction(IDbContextTransaction Transaction)
+        {
+            try
+            {
+                await Repository.RollbackTransaction(Transaction);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogWarning("");
             }
         }
 
@@ -65,6 +101,7 @@ namespace Social_Media.Services.ImplementationServices
             }
         }
 
+
         public virtual Task SaveChangesAsync()
         {
             try
@@ -90,5 +127,6 @@ namespace Social_Media.Services.ImplementationServices
                 return Task.CompletedTask;
             }
         }
+
     }
 }

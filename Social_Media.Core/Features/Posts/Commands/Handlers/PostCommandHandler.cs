@@ -1,9 +1,10 @@
-﻿using MediatR;
-using Microsoft.Extensions.Configuration;
+﻿using ConstantStatementInAllProject.Files;
+using MediatR;
 using Microsoft.Extensions.Logging;
 using Social_Media.Core.Abstracts_UnitOFWork;
 using Social_Media.Core.Features.Posts.Commands.Models;
 using Social_Media.Core.Response_Structure;
+using Social_Media.Data.Models.Posts;
 using Social_Media.Models;
 
 namespace Social_Media.Core.Features.Posts.Commands.Handlers
@@ -80,58 +81,51 @@ namespace Social_Media.Core.Features.Posts.Commands.Handlers
         #endregion
         public async Task<Response<string>> Handle(AddImageOrVideoPostCommand request, CancellationToken cancellationToken)
         {
-            try
+            using (var Transaction = await UnitOFWork.ImageOrVideoPostServices.BeginTransaction())
             {
-
-                var ImageExtensions = UnitOFWork.Configuration.GetSection("Posts:Images:AllowedExtension").Get<string[]>();
-                var VideoExtensions = UnitOFWork.Configuration.GetSection("Posts:Videos:AllowedExtension").Get<string[]>();
-
-                var FileExtension = Path.GetExtension(request.ImageOrVideo.FileName).ToLowerInvariant();
-
-                (string Path, bool IsValid) FilePathResult;
-                long MaxSizeBytes;
-                string SizeErrorMessage;
-
-                if (ImageExtensions.Contains(FileExtension))
+                try
                 {
-                    MaxSizeBytes = UnitOFWork.Configuration.GetSection("Posts:Images:MaxSize").Get<long>();
-                    FilePathResult = await UnitOFWork.FileServices.GeneratePathOFFile(request.ImageOrVideo, MaxSizeBytes, UnitOFWork.Configuration.GetSection("Posts:Images:DirectoryThatStoreFileIn").Get<string>()!, ImageExtensions);
-                    SizeErrorMessage = $"The Max Size Of Image Is [{MaxSizeBytes / (1024 * 1024)}] Mega byte";
-                }
-                else if (VideoExtensions.Contains(FileExtension))
-                {
-                    MaxSizeBytes = UnitOFWork.Configuration.GetSection("Posts:Videos:MaxSize").Get<long>();
-                    FilePathResult = await UnitOFWork.FileServices.GeneratePathOFFile(request.ImageOrVideo, MaxSizeBytes, UnitOFWork.Configuration.GetSection("Posts:Videos:DirectoryThatStoreFileIn").Get<string>()!, VideoExtensions);
-                    SizeErrorMessage = $"The Max Size Of Video Is [{MaxSizeBytes / (1024 * 1024 * 1024)}] Giga byte";
-                }
-                else
-                {
-                    return BadRequest<string>("Invalid file type. Allowed extensions: " + string.Join(", ", ImageExtensions.Concat(VideoExtensions)));
-                }
+                    ImageOrVideoPost Mapped_ImageOrVideoPost = UnitOFWork.Mapper.Map<ImageOrVideoPost>(request);
+                    await UnitOFWork.ImageOrVideoPostServices.AddAsync(Mapped_ImageOrVideoPost);
+                    await UnitOFWork.ImageOrVideoPostServices.SaveChangesAsync();
 
-                ImageOrVideoPost MappedPost = UnitOFWork.Mapper.Map<ImageOrVideoPost>(request);
 
-                if (FilePathResult.Path is not null & FilePathResult.IsValid)
-                {
-                    MappedPost.ImageOrVideoPath = FilePathResult.Path;
-                }
-                else if (FilePathResult.Path == string.Empty & !FilePathResult.IsValid)
-                {
-                    return BadRequest<string>(SizeErrorMessage);
-                }
-                else
-                {
-                    return BadRequest<string>("Some Thing Is Wrong When Adding Post");
-                }
-                await UnitOFWork.ImageOrVideoPostServices.AddAsync(MappedPost);
-                await UnitOFWork.ImageOrVideoPostServices.SaveChangesAsync();
+                    (List<string>, bool) PathsOFImagesOrVideos = await UnitOFWork.FileServices.GeneratePathOFFiles(request.ImageOrVideos, UnitOFWork.ConfigurationOFPostImageServices.MaxSize(), UnitOFWork.ConfigurationOFPostImageServices.AllowedExtension(),
+                        UnitOFWork.ConfigurationOFPostImageServices.DirectoryThatStoreFileIn(), UnitOFWork.ConfigurationOFPostVideoServices.MaxSize(), UnitOFWork.ConfigurationOFPostVideoServices.DirectoryThatStoreFileIn(),
+                        UnitOFWork.ConfigurationOFPostVideoServices.AllowedExtension());
 
-                return Created<string>("Post created successfully");
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(ex, "Error creating media post");
-                return BadRequest<string>("An error occurred while creating the post");
+                    if (PathsOFImagesOrVideos.Item1.Contains(FilesConstants.ErrorExtensionFiles) || PathsOFImagesOrVideos.Item1.Contains(FilesConstants.ErrorSizeFiles) && PathsOFImagesOrVideos.Item2 == false)
+                    {
+                        await UnitOFWork.ImageOrVideoPostServices.RollbackTransaction(Transaction);
+                        return BadRequest<string>(PathsOFImagesOrVideos.Item1.Select(E => E).ToString()!);
+                    }
+                    else if (PathsOFImagesOrVideos.Item2 == false)
+                    {
+                        await UnitOFWork.ImageOrVideoPostServices.RollbackTransaction(Transaction);
+                        return BadRequest<string>(PathsOFImagesOrVideos.Item1.Select(E => E).ToString()!);
+                    }
+
+                    foreach (var Path in PathsOFImagesOrVideos.Item1)
+                    {
+                        ImageOrVideoPath imageOrVideoPath = new ImageOrVideoPath()
+                        {
+                            PostId = Mapped_ImageOrVideoPost.Id,
+                            Image_Or_VideoPath = Path
+                        };
+
+                        await UnitOFWork.ImageOrVideoPathServices.AddAsync(imageOrVideoPath);
+                    }
+                    await UnitOFWork.ImageOrVideoPathServices.SaveChangesAsync();
+                    await UnitOFWork.ImageOrVideoPostServices.CommitTransaction(Transaction);
+                    return Created<string>("Post Is Created Successfully");
+
+                }
+                catch (Exception ex)
+                {
+                    await UnitOFWork.ImageOrVideoPostServices.RollbackTransaction(Transaction);
+                    Logger.LogError(ex, "Error creating media post");
+                    return BadRequest<string>("An error occurred while creating the post");
+                }
             }
         }
     }

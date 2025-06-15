@@ -9,7 +9,7 @@ namespace Social_Media.Models
     public class TextPost
     {
         public int Id { get; set; }
-        public string Content { get; set; }
+        public string Content { get; set; } = string.Empty;
 
         [ForeignKey("User")]
         public string UserId { get; set; }

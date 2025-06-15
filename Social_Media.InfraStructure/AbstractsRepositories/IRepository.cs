@@ -1,4 +1,6 @@
-﻿namespace Social_Media.InfraStructure.AbstractsRepositories
+﻿using Microsoft.EntityFrameworkCore.Storage;
+
+namespace Social_Media.InfraStructure.AbstractsRepositories
 {
     public interface IRepository<T> where T : class
     {
@@ -8,5 +10,8 @@
         Task UpdateAsync(T entity);
         Task DeleteAsync(int id);
         Task SaveChangesAsync();
+        Task<IDbContextTransaction> BeginTransaction();
+        Task CommitTransaction(IDbContextTransaction Transaction);
+        Task RollbackTransaction(IDbContextTransaction Transaction);
     }
 }

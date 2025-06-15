@@ -11,16 +11,16 @@ namespace Social_Media.Core.Features.Posts.Commands.Models
         {
 
         }
-        public AddImageOrVideoPostCommand(string? Post_Title, string UserId_That_Want_To_AddPost, Privacy Post_Privacy, IFormFile ImageOrVideo)
+        public AddImageOrVideoPostCommand(string? Post_Title, string UserId_That_Want_To_AddPost, Privacy Post_Privacy, List<IFormFile> ImageOrVideos)
         {
             this.Post_Title = Post_Title;
             this.UserId_That_Want_To_AddPost = UserId_That_Want_To_AddPost;
             this.Post_Privacy = Post_Privacy;
-            this.ImageOrVideo = ImageOrVideo;
+            this.ImageOrVideos = ImageOrVideos;
         }
         public string? Post_Title { get; set; }
         public string UserId_That_Want_To_AddPost { get; set; }
         public Privacy Post_Privacy { get; set; }
-        public IFormFile ImageOrVideo { get; set; }
+        public List<IFormFile> ImageOrVideos { get; set; }
     }
 }
