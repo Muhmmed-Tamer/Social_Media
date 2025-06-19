@@ -11,8 +11,10 @@ using Social_Media.InfraStructure.AbstractsRepositories.Notifications;
 using Social_Media.Services.AbstractsServices;
 using Social_Media.Services.AbstractsServices.InteractionsServices;
 using Social_Media.Services.AbstractsServices.PostsServices;
+using Social_Media.Services.AbstractsServices.StoryServices;
 using Social_Media.Services.AbstractsServicesOFSpecialModels;
 using Social_Media.Services.AbstractsServicesOFSpecialModels.FileConfigurations;
+using Social_Media.Services.ImplementationServices.StoryServices;
 
 namespace Social_Media.Core.Implementation_UnitOFWork
 {
@@ -55,13 +57,22 @@ namespace Social_Media.Core.Implementation_UnitOFWork
 
         public IImageOrVideoPostServices ImageOrVideoPostServices { get; }
 
-        public IImageOrVideoPathServices ImageOrVideoPathServices { get; }
+        public IImageOrVideoPathServices ImageOrVideoPathServices { get; }// It's For Post
 
         public IFileConfigurationServices<ConfigurationOFPostImageServices> ConfigurationOFPostImageServices { get; }
 
         public IFileConfigurationServices<ConfigurationOFPostVideoServices> ConfigurationOFPostVideoServices { get; }
 
         public IFileConfigurationServices<ConfigurationOFUserImageServices> ConfigurationOFUserImageServices { get; }
+
+      
+
+        
+        public IImageOrVideoStoryPathService ImageOrVideoStoryPathService {  get; }
+
+      
+
+        public IStoryService StoryService { get; }
         #endregion
         #region Constructor 
         public UnitOFWork(UserManager<ApplicationUser> ManagerUser, RoleManager<IdentityRole> ManagerRole, IFileService FileServices, ITextPostServices TextPostServices,
@@ -69,7 +80,7 @@ namespace Social_Media.Core.Implementation_UnitOFWork
             IPostNotificationServices PostNotificationServices, IMessageNotificationServices MessageNotificationServices, IFriendRequestNotificationServices FriendRequestNotificationServices, IInteractionNotificationByStoryServices InteractionNotificationByStoryServices,
             IInteractionNotificationByPostServices InteractionNotificationByPostServices, IInteractionNotificationByCommentServices InteractionNotificationByCommentServices, IConfiguration Configuration, IMapper Mapper, IImageOrVideoPostServices ImageOrVideoPostServices,
             IImageOrVideoPathServices ImageOrVideoPathServices, IFileConfigurationServices<ConfigurationOFPostImageServices> ConfigurationOFPostImageServices, IFileConfigurationServices<ConfigurationOFPostVideoServices> ConfigurationOFPostVideoServices,
-            IFileConfigurationServices<ConfigurationOFUserImageServices> ConfigurationOFUserImageServices
+            IFileConfigurationServices<ConfigurationOFUserImageServices> ConfigurationOFUserImageServices,IImageOrVideoStoryPathService imageOrVideoStoryPathService,IStoryService storyService
             )
         {
             this.ManagerUser = ManagerUser;
@@ -94,6 +105,9 @@ namespace Social_Media.Core.Implementation_UnitOFWork
             this.ConfigurationOFPostVideoServices = ConfigurationOFPostVideoServices;
             this.ConfigurationOFUserImageServices = ConfigurationOFUserImageServices;
             this.Mapper = Mapper;
+            this.ImageOrVideoStoryPathService = imageOrVideoStoryPathService;
+            this.StoryService = storyService;
+           
         }
         #endregion
     }

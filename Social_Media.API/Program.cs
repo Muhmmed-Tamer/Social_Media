@@ -67,7 +67,7 @@ namespace Social_Media.API
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-            app.MapHub<>("");// Specify the hub you want to use, e.g., app.MapHub<ChatHub>("/chatHub");
+            //app.MapHub<>("");// Specify the hub you want to use, e.g., app.MapHub<ChatHub>("/chatHub");
 
             app.MapControllers();
             app.Run();

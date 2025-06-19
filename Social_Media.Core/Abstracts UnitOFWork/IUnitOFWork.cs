@@ -10,6 +10,7 @@ using Social_Media.InfraStructure.AbstractsRepositories.Notifications;
 using Social_Media.Services.AbstractsServices;
 using Social_Media.Services.AbstractsServices.InteractionsServices;
 using Social_Media.Services.AbstractsServices.PostsServices;
+using Social_Media.Services.AbstractsServices.StoryServices;
 using Social_Media.Services.AbstractsServicesOFSpecialModels;
 using Social_Media.Services.AbstractsServicesOFSpecialModels.FileConfigurations;
 
@@ -23,6 +24,9 @@ namespace Social_Media.Core.Abstracts_UnitOFWork
         IFileService FileServices { get; }
         ITextPostServices TextPostServices { get; }
         IImageOrVideoPostServices ImageOrVideoPostServices { get; }
+        IStoryService StoryServices { get; }
+        IImageOrVideoStoryPathService ImageOrVideoStoryPathService { get; }
+   
         IMessageServices MessageServices { get; }
         IFriendServices FriendServices { get; }
         IInteractionWithStoryServices InteractionWithStoryServices { get; }
@@ -34,7 +38,7 @@ namespace Social_Media.Core.Abstracts_UnitOFWork
         IInteractionNotificationByStoryServices InteractionNotificationByStoryServices { get; }
         IInteractionNotificationByPostServices InteractionNotificationByPostServices { get; }
         IInteractionNotificationByCommentServices InteractionNotificationByCommentServices { get; }
-        IImageOrVideoPathServices ImageOrVideoPathServices { get; }
+        IImageOrVideoPathServices ImageOrVideoPathServices { get; }  // It's For Post
         IFileConfigurationServices<ConfigurationOFPostImageServices> ConfigurationOFPostImageServices { get; }
         IFileConfigurationServices<ConfigurationOFPostVideoServices> ConfigurationOFPostVideoServices { get; }
         IFileConfigurationServices<ConfigurationOFUserImageServices> ConfigurationOFUserImageServices { get; }

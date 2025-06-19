@@ -12,3 +12,4 @@ namespace Social_Media.InfraStructure.Configurations.Notifications.MessageNotifi
         }
     }
 }
+ 

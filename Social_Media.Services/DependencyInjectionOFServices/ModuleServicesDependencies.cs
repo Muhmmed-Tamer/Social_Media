@@ -6,6 +6,7 @@ using Social_Media.Data.Models.Interactions;
 using Social_Media.Data.Models.Notifications;
 using Social_Media.Data.Models.Notifications.Interactions_Notifications;
 using Social_Media.Data.Models.Posts;
+using Social_Media.Data.Models.Story;
 using Social_Media.Models;
 using Social_Media.Services.AbstractsServices;
 using Social_Media.Services.AbstractsServicesOFSpecialModels;
@@ -26,6 +27,11 @@ namespace Social_Media.Services.DependencyInjectionOFServices
             Services.AddScoped<IServices<TextPost>, Services<TextPost>>();
             Services.AddScoped<IServices<ImageOrVideoPost>, Services<ImageOrVideoPost>>();
             Services.AddScoped<IServices<ImageOrVideoPath>, Services<ImageOrVideoPath>>();
+            #endregion
+            #region Story
+            Services.AddScoped<IServices<TextStory>, Services<TextStory>>();
+            Services.AddScoped<IServices<ImageOrVideoStory>, Services<ImageOrVideoStory>>();
+            Services.AddScoped<IServices<ImageOrVideoStoryPath>, Services<ImageOrVideoStoryPath>>();
             #endregion
 
             #region Interactions

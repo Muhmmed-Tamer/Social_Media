@@ -8,9 +8,11 @@ using Social_Media.InfraStructure.ImplementationRepositories.NotificationsReposi
 using Social_Media.Services.AbstractsServices;
 using Social_Media.Services.AbstractsServices.InteractionsServices;
 using Social_Media.Services.AbstractsServices.PostsServices;
+using Social_Media.Services.AbstractsServices.StoryServices;
 using Social_Media.Services.ImplementationServices;
 using Social_Media.Services.ImplementationServices.InteractionsServices;
 using Social_Media.Services.ImplementationServices.PostServices;
+using Social_Media.Services.ImplementationServices.StoryServices;
 using System.Reflection;
 
 namespace SchoolProject.Core.DependencyInjectionOFCore
@@ -31,6 +33,10 @@ namespace SchoolProject.Core.DependencyInjectionOFCore
             Services.AddScoped<ITextPostServices, TextPostServices>();
             Services.AddScoped<IImageOrVideoPostServices, ImageOrVideoPostServices>();
             Services.AddScoped<IImageOrVideoPathServices, ImageOrVideoPathServices>();
+            #endregion
+            #region Story
+            Services.AddScoped<IImageOrVideoStoryPathService, ImageOrVideoStoryPathService>();
+            Services.AddScoped<IStoryService, StoryService>();
             #endregion
             #region Registration OF Interactions
             Services.AddScoped<IInteractionWithStoryServices, InteractionWithStoryServices>();

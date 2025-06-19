@@ -17,6 +17,7 @@
     <Folder Include="Features\Posts\Queries\Handlers\" />
     <Folder Include="Features\Posts\Queries\Models\" />
     <Folder Include="Features\Posts\Queries\Results\" />
+    <Folder Include="Features\Story\Queries\" />
     <Folder Include="Features\Users\Commands\Validators\" />
     <Folder Include="Features\Users\Queries\Handlers\" />
     <Folder Include="Features\Users\Queries\Models\" />

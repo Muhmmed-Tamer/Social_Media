@@ -3,6 +3,7 @@ using Social_Media.Data.Models.Interactions;
 using Social_Media.Data.Models.Notifications;
 using Social_Media.Data.Models.Notifications.Interactions_Notifications;
 using Social_Media.Data.Models.Posts;
+using Social_Media.Data.Models.Story;
 using Social_Media.InfraStructure.AbstractsRepositories;
 using Social_Media.InfraStructure.ImplementationRepositories;
 using Social_Media.Models;
@@ -22,6 +23,11 @@ namespace Social_Media.InfraStructure.DependencyInjectionOFInfraStructure
             Services.AddScoped<IRepository<TextPost>, Repository<TextPost>>();
             Services.AddScoped<IRepository<ImageOrVideoPost>, Repository<ImageOrVideoPost>>();
             Services.AddScoped<IRepository<ImageOrVideoPath>, Repository<ImageOrVideoPath>>();
+            #endregion
+            #region Story
+        
+            Services.AddScoped<IRepository<Story>, Repository<Story>>();
+            Services.AddScoped<IRepository<ImageOrVideoStoryPath>, Repository<ImageOrVideoStoryPath>>();    
             #endregion
 
             #region Notifications
