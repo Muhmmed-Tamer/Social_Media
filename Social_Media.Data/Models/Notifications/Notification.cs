@@ -19,6 +19,7 @@ namespace Social_Media.Data.Models.Notifications
         public string? NotificationContent { get; set; }
         public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
         public bool IsRead { get; set; } = false;
+        public bool IsUpdated { get; set; } = false;
 
         public virtual ApplicationUser? UserThatCausedNotification { get; set; }
         public virtual ApplicationUser? UserThatReceivedNotification { get; set; }

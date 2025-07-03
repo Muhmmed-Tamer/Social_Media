@@ -11,7 +11,7 @@ using Social_Media.Data.Identity;
 namespace Social_Media.Core.Features.Users.Commands.Handlers
 {
     public class UserCommandHandler : ResponseHandler, IRequestHandler<AddUserCommand, Response<string>>,
-        IRequestHandler<ResetPasswordByEmailCommand, Response<string>>
+        IRequestHandler<ResetPasswordByEmailCommand, Response<string>>,IRequestHandler<DeleteUserCommand,Response<string>>
     {
         private readonly ILogger Logger;
         private readonly IUnitOFWork UnitOFWork;
@@ -103,6 +103,7 @@ namespace Social_Media.Core.Features.Users.Commands.Handlers
                 return BadRequest<string>(ex.Message);
             }
         }
+
         private async Task<bool> ResultOFEmailNotification(ApplicationUser Mapped_User)
         {
             try
@@ -118,6 +119,30 @@ namespace Social_Media.Core.Features.Users.Commands.Handlers
                 throw;
             }
         }
+
+
+        public async Task<Response<string>> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
+        {
+            try
+            {
+                ApplicationUser applicationUser = await UnitOFWork.IdentityUnitOFWork.UserServices.ManagerUser.FindByIdAsync(request.UserId);
+                if (applicationUser is null) return BadRequest<string>("User Not Fount");
+                else
+                {
+                    applicationUser.IsDeleted = true;
+
+                    await UnitOFWork.IdentityUnitOFWork.UserServices.ManagerUser.UpdateAsync(applicationUser);
+                    return OK("Within 90 days, if you do not log in, the account will be permanently deleted.");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex.Message);
+                return BadRequest<string>(ex.Message);
+
+            }
+        }
         private async Task<IdentityResult> AddRegularUserRoleToUser(ApplicationUser Mapped_User)
         {
             try
@@ -130,5 +155,8 @@ namespace Social_Media.Core.Features.Users.Commands.Handlers
                 throw;
             }
         }
+
+
     }
+    
 }

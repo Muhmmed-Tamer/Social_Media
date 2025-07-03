@@ -13,6 +13,8 @@ namespace Social_Media.Data.Models.Chat
         [ForeignKey("ReceiverUser")]
         public string ReceiverId { get; set; }
         public bool IsRead { get; set; } = false;
+        public bool IsDeleted { get; set; } = false;    
+        public bool IsUpdated { get; set; } = false;  
         public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
         public MessageType MessageType { get; set; }
         public virtual ApplicationUser? SenderUser { get; set; }

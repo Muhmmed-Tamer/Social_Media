@@ -33,5 +33,20 @@ namespace Social_Media.API.Controllers
             var Result = Mediator.Send(new GetPostsOFUserQuery(UserId)).Result;
             return New_Result(Result);
         }
+        [HttpDelete("DeleteImageOrVideoPost")]
+        public async Task<IActionResult> DeleteImageOrVideoPost([FromBody]DeleteImageOrVideoPostCommand deleteImageOrVideoPostCommand)
+        {
+            var Result =  Mediator.Send(new DeleteImageOrVideoPostCommand(deleteImageOrVideoPostCommand.Id)).Result;
+
+            return New_Result(Result);
+        }
+        [HttpDelete("DeleteTextPost")]
+        public async Task<IActionResult> DelteTextPost([FromBody]DeleteTextPostCommand deleteTextPostCommand,CancellationToken cancellationToken)
+        {
+            var Result = Mediator.Send(new DeleteTextPostCommand(deleteTextPostCommand.Id,deleteTextPostCommand.UserIdWhoWantToDelete)).Result; 
+            return New_Result(Result);
+
+        }
+         
     }
 }

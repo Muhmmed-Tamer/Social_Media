@@ -18,6 +18,7 @@ namespace Social_Media.Data.Models.Interactions
         public int? CommentId { get; set; }
         [ForeignKey("Post")]
         public int PostId { get; set; }
+        public bool IsDeleted { get; set; } = false;
         public virtual ApplicationUser? User { get; set; }
 
         public virtual Comment? Comment { get; set; }

@@ -30,7 +30,7 @@ namespace Social_Media.API
             // Add services to the container.
 
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            // Learn more about configuring Swagger/OpenAPI at https://aka.System.IO.DirectoryNotFoundException: 'C:\Users\LOQ\Desktop\Social_Media\Social_Media.API\wwwroot\'ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddDbContext<ContextData>(Options =>

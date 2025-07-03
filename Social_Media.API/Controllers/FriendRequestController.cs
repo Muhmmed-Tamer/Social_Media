@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Social_Media.API.Results_OF_API;
+using Social_Media.Core.Features.Friend_Request.Commands.Models;
 using Social_Media.Core.Features.Friend_Request_Notifications.Commands.Models;
+using Social_Media.Core.Features.Friends.Commands.Models;
 
 namespace Social_Media.API.Controllers
 {
@@ -30,6 +32,13 @@ namespace Social_Media.API.Controllers
         public IActionResult UpdateFriendRequest([FromBody] RejectFriendRequestCommand rejectFriendRequestCommandFromUser)
         {
             var Result = Mediator.Send(new RejectFriendRequestCommand(rejectFriendRequestCommandFromUser.FriendUserIdThatConfirmFriendRequest, rejectFriendRequestCommandFromUser.UserIdThatSentFriendRequest)).Result;
+            return New_Result(Result);
+        }
+        [HttpDelete("Delete")]
+        public IActionResult DeleteFriendRequest(DeleteFriendRequestCommand deleteFriendRequestCommand)
+        {
+            var Result = Mediator.Send(new DeleteFriendRequestCommand(deleteFriendRequestCommand.Id, deleteFriendRequestCommand.UserId, deleteFriendRequestCommand.FriendUserId)).Result;
+
             return New_Result(Result);
         }
     }

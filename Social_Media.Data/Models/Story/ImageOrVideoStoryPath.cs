@@ -14,5 +14,6 @@ namespace Social_Media.Data.Models.Story
         public int StoryId { get; set; }
         public string Image_Or_VideoPath { get; set; }
         public Story? Story { get; set; }
+        public bool IsUpdated { get; set; } = false;
     }
 }

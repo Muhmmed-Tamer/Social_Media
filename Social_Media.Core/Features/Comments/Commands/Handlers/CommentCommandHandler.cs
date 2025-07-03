@@ -2,6 +2,7 @@
 using Serilog;
 using Social_Media.Core.Abstracts_UnitOFWork;
 using Social_Media.Core.Features.Comments.Commands.Models;
+using Social_Media.Core.Features.Comments.Commands.Validators;
 using Social_Media.Core.Features.Comments.Queires.Results;
 using Social_Media.Core.Features.Notifications.Queries.Results;
 using Social_Media.Core.Response_Structure;
@@ -12,10 +13,13 @@ using Social_Media.Data.Models.Notifications.AddCommentNotification;
 namespace Social_Media.Core.Features.Comments.Commands.Handlers
 {
     public class CommentCommandHandler : ResponseHandler, IRequestHandler<AddCommentToPostCommand, Response<string>>,
-        IRequestHandler<AddReplyOFCommentCommand, Response<string>>
+
+        IRequestHandler<DeleteCommentCommand, Response<string>>
+
     {
         private readonly IUnitOFWork UnitOFWork;
         private readonly ILogger Logger;
+       
         public CommentCommandHandler(ILogger Logger, IUnitOFWork UnitOFWork)
         {
             this.UnitOFWork = UnitOFWork;
@@ -68,6 +72,7 @@ namespace Social_Media.Core.Features.Comments.Commands.Handlers
             }
         }
 
+
         public async Task<Response<string>> Handle(AddReplyOFCommentCommand request, CancellationToken cancellationToken)
         {
             using (var Transaction = await UnitOFWork.CommentUnitOFWork.ReplyOFCommentService.BeginTransaction())
@@ -83,6 +88,34 @@ namespace Social_Media.Core.Features.Comments.Commands.Handlers
                 catch (Exception ex)
                 {
                     await Transaction.RollbackAsync();
+                    Logger.Error(ex.Message, ex);
+                    return BadRequest<string>(ex.Message);
+                }
+            }
+        }
+
+        public async Task<Response<string>> Handle(DeleteCommentCommand request, CancellationToken cancellationToken)
+        {
+            using (var Transaction = await UnitOFWork.CommentUnitOFWork.CommentServices.BeginTransaction())
+            {
+                try
+                {
+                    
+                    
+                    Comment comment= await UnitOFWork.CommentUnitOFWork.CommentServices.GetByIdAsync(request.Id);
+                    comment.IsDeleted = true;   
+                   
+                    await UnitOFWork.CommentUnitOFWork.CommentServices.SaveChangesAsync();
+
+                    await Transaction.CommitAsync();
+
+                    return OK("Comment Is Deleted Successfully");
+
+                }
+                catch (Exception ex)
+                {
+                    await UnitOFWork.CommentUnitOFWork.CommentServices.RollbackTransaction(Transaction);
+
                     Logger.Error(ex.Message, ex);
                     return BadRequest<string>(ex.Message);
                 }

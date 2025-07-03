@@ -15,5 +15,7 @@ namespace Social_Media.Data.Models.Notifications.FriendRequestNotifications
         public int NotificationId { get; set; }
         public virtual Notification? Notification { get; set; }
         public virtual FriendRequest? FriendRequest { get; set; }
+        public bool IsUpdated { get; set; } = false;
+        public bool IsDeleted { get; set; } = false;
     }
 }

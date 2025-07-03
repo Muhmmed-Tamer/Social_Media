@@ -42,10 +42,20 @@ namespace Social_Media.API.Controllers
             var Result = Mediator.Send(new GetUserByUserId(UserId)).Result;
             return New_Result(Result);
         }
+
         [HttpGet("UserIsOnlineOrNot:{UserId:guid}")]
         public IActionResult GetUserIsOnlineOrNot(string UserId)
         {
             var Result = Mediator.Send(new GetUserIsOnlineOrNotQuery(UserId)).Result;
+            return New_Result(Result);
+        }
+
+        [HttpDelete("Delete")]
+        public IActionResult DeleteUser(DeleteUserCommand deleteUserCommand)
+        {
+            var Result = Mediator.Send(new DeleteUserCommand(deleteUserCommand.UserId, deleteUserCommand.Password)).Result;
+
+
             return New_Result(Result);
         }
     }

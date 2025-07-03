@@ -1,4 +1,5 @@
-﻿using Social_Media.Data.Identity;
+﻿using Microsoft.AspNetCore.Razor.TagHelpers;
+using Social_Media.Data.Identity;
 using Social_Media.Data.Models.Interactions;
 using Social_Media.Data.Models.Notifications.Interactions_Notifications;
 using Social_Media.Data.Models.Posts;
@@ -13,6 +14,9 @@ namespace Social_Media.Data.Models.Comments
         public int Id { get; set; }
         [MaxLength(5000)]
         public string Content { get; set; }
+        public bool IsDeleted { get; set; } = false;    
+        public bool IsUpdated { get; set; } =false;
+
         public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
         [ForeignKey("User")]
         public string UserId { get; set; }

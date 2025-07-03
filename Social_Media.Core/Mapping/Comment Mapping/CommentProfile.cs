@@ -7,9 +7,11 @@ namespace Social_Media.Core.Mapping.Comment_Mapping
         public CommentProfile()
         {
             MappingAddCommentToPostCommand();
+
             MappingAddReplyOFCommentCommand();
             MappingReplyOFCommentQuery();
             MappingGetCommentOFPostQuery();
+
         }
     }
 }

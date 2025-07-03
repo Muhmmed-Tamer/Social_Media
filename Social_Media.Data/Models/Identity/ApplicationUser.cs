@@ -32,6 +32,7 @@ namespace Social_Media.Data.Identity
         public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
 
         public bool IsBlocked { get; set; } = false;
+        public bool IsDeleted { get; set; } = false;
         public string? ResetPasswordCode { get; set; }
 
         #region Relation Between ApplicationUser & Other Classes
@@ -46,6 +47,7 @@ namespace Social_Media.Data.Identity
         public virtual ICollection<FriendRequest>? ReceiveFriendRequests { get; set; }
         public virtual ICollection<Friend>? FriendshipsInitiated { get; set; }
         public virtual ICollection<Friend>? FriendshipsReceived { get; set; }
+        public virtual ICollection<ApplicationUser>? ApplicationUsersThoseIsBlocked { get; set; }
         public virtual ICollection<Story>? Stories { get; set; }
         public virtual ICollection<UserConnection>? UserConnections { get; set; }
         public virtual ICollection<Notification>? UserThatCausedNotifications { get; set; }

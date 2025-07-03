@@ -10,6 +10,8 @@ namespace Social_Media.Data.Models.Friends
         [ForeignKey("User")]
         public string UserId { get; set; }
         public bool IsRead { get; set; } = false;
+        public bool IsCanceled { get; set; } = false;
+        public bool IsDeleted { get; set; } = false;
         public Status status { get; set; } = Status.Pending;
         public DateTime SendAt { get; set; } = DateTime.Now;
         [ForeignKey("FriendUser")]

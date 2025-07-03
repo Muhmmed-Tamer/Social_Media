@@ -14,6 +14,8 @@ namespace Social_Media.Data.Models.Posts
         public string? Caption { get; set; }
         [ForeignKey("User")]
         public string UserId { get; set; }
+        public bool IsDeleted { get; set; } = false;
+        public bool IsUpdated { get; set; } = false;
         public DateTimeOffset CreatedDate { get; set; } = DateTimeOffset.UtcNow;
         public Privacy Privacy { get; set; }
         public PostType PostType { get; set; }

@@ -27,5 +27,11 @@ namespace Social_Media.API.Controllers
             var Result = Mediator.Send(new GetInteractionWithCommentQuery(PostId, CommentId)).Result;
             return New_Result(Result);
         }
+        [HttpDelete("Delete")]
+        public IActionResult DeleteInteractionWithComment(DeleteInteractionWithCommentCommand command)
+        {
+            var Result = Mediator.Send(new DeleteInteractionWithCommentCommand(command.Id,command.PostId,command.CommentId)).Result;
+            return New_Result(Result);
+        }
     }
 }

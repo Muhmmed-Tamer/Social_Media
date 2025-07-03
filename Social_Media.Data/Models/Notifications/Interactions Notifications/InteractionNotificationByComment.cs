@@ -14,5 +14,9 @@ namespace Social_Media.Data.Models.Notifications.Interactions_Notifications
         public int NotificationId { get; set; }
         public virtual Notification? Notification { get; set; }
         public virtual Comment? Comment { get; set; }
+
+        public bool IsUpdated { get; set; } = false;
+        public bool IsDeleted { get; set; } = false;
+
     }
 }

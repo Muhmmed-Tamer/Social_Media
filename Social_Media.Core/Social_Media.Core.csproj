@@ -17,6 +17,7 @@
     <ProjectReference Include="..\Social_Media.Data\Social_Media.Data.csproj" />
     <ProjectReference Include="..\Social_Media.RealTimeServices\Social_Media.RealTimeServices.csproj" />
     <ProjectReference Include="..\Social_Media.Services\Social_Media.Services.csproj" />
+	 
   </ItemGroup>
 
   <ItemGroup>

@@ -8,6 +8,7 @@ namespace Social_Media.Data.Models.Friends
         public int Id { get; set; }
         [ForeignKey("MainUser")]
         public string UserId { get; set; }
+        public bool IsDeleted { get; set; }=false;
 
         [ForeignKey("FriendUser")]
         public string FriendUserId { get; set; }

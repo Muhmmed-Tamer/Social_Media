@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Social_Media.API.Results_OF_API;
@@ -33,6 +33,14 @@ namespace Social_Media.API.Controllers
         {
             var Result = Mediator.Send(new GetCommentsOFPostQuery(PostId)).Result;
             return New_Result(Result);
+        }
+        [HttpDelete("DeleteComment")]
+        public  IActionResult DeleteCommentByPostId([FromBody]DeleteCommentCommand deleteCommentCommand)
+        {
+            var Result =  Mediator.Send(new DeleteCommentCommand(deleteCommentCommand.Id,deleteCommentCommand.PostId,deleteCommentCommand.UserIdHowWantToDelete)).Result;
+
+            return New_Result(Result);
+
         }
     }
 }

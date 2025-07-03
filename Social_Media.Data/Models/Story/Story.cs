@@ -21,6 +21,7 @@ namespace Social_Media.Data.Models.Story
         public bool IsRemoved => DateTimeOffset.UtcNow >= RemovedAt;
         [ForeignKey("User")]
         public string UserId { get; set; }
+        public bool IsUpdated { get; set; } = false;
         public Privacy Privacy { get; set; }
         public virtual ApplicationUser? User { get; set; }
         public ICollection<InteractionNotificationByStory>? InteractionNotificationByStories { get; set; }

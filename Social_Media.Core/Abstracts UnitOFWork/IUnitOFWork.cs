@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Configuration;
+using Social_Media.Data;
 using Social_Media.Services.AbstractsServices.UserConnectionServices;
 using Social_Media.Services.AbstractsServicesOFSpecialModels.Authentication_Services;
 using Social_Media.Services.AbstractsServicesOFSpecialModels.ProtocolAndHosts_Services;
@@ -20,11 +21,14 @@ namespace Social_Media.Core.Abstracts_UnitOFWork
         IIdentityUnitOFWork IdentityUnitOFWork { get; }
         IInteractionUnitOFWork InteractionUnitOFWork { get; }
         IMapper Mapper { get; }
+
         INotificationUnitOFWork NotificationUnitOFWork { get; }
         IPostUnitOFWork PostUnitOFWork { get; }
         IRealTimeUnitOFWork RealTimeUnitOFWork { get; }
         IStoryUnitOFWork StoryUnitOFWork { get; }
         IUserConnectionServices UserConnectionServices { get; }
+        ContextData ContextData { get; }    
+
         #endregion
     }
 }

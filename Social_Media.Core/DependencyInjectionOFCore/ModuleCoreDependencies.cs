@@ -69,6 +69,12 @@ namespace SchoolProject.Core.DependencyInjectionOFCore
             #region Chat
             Services.AddScoped<IChatUnitOFWork, ChatUnitOFWork>();
             #endregion
+           
+
+
+
+
+
         }
     }
 }

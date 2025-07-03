@@ -12,6 +12,7 @@ namespace Social_Media.Data.Models.Interactions
 
         [ForeignKey("User")]
         public string UserId { get; set; }
+        public bool IsDeleted { get; set; }=false;
         public InteractionType InteractionBy { get; set; }
         [ForeignKey("Post")]
         public int? PostId { get; set; }
