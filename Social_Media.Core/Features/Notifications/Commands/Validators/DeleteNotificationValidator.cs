@@ -1,14 +1,6 @@
 ﻿using FluentValidation;
-using Microsoft.Extensions.DependencyInjection;
 using Social_Media.Core.Abstracts_UnitOFWork;
 using Social_Media.Core.Features.Notifications.Commands.Models;
-using Social_Media.Core.Implementation_UnitOFWork;
-using Social_Media.Data.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Social_Media.Core.Features.Notifications.Commands.Validators
 {
@@ -20,38 +12,25 @@ namespace Social_Media.Core.Features.Notifications.Commands.Validators
         public DeleteNotificationValidator(IUnitOFWork unitOFWork)
         {
             this.unitOFWork = unitOFWork;
-            RuleFor(x => x.Id)
-            .MustAsync(NotificationExistsAsync)
-            .WithMessage("The notification you're trying to delete does not exist.");
+            ValidateNotificationIdAndUserIdNotNullOrEmpty();
+            ValidateIdfUserIsFoundOrNot();
         }
-        private async Task<bool> NotificationExistsAsync(DeleteNotificationCommand command, int id, ValidationContext<DeleteNotificationCommand> context, CancellationToken cancellationToken)
+        public void ValidateNotificationIdAndUserIdNotNullOrEmpty()
         {
-            return command.Type switch
-            {
-                NotificationType.AddPost =>
-                    await unitOFWork.NotificationUnitOFWork.PostNotificationServices.GetByIdAsync(id) is not null,
-                NotificationType.SendMessage =>
-                    await unitOFWork.NotificationUnitOFWork.MessageNotificationServices.GetByIdAsync(id) is not null,
-                NotificationType.InteractionWithPost =>
-                    await unitOFWork.InteractionUnitOFWork.InteractionNotificationByPostServices.GetByIdAsync(id) is not null,
-                NotificationType.InteractionWithStory =>
-                    await unitOFWork.InteractionUnitOFWork.InteractionNotificationByStoryServices.GetByIdAsync(id) is not null,
-                NotificationType.InteractionWithComment =>
-                    await unitOFWork.InteractionUnitOFWork.InteractionWithCommentServices.GetByIdAsync(id) is not null,
-                NotificationType.AddComment =>
-                    await unitOFWork.NotificationUnitOFWork.CommentNotificationService.GetByIdAsync(id) is not null,
+            RuleFor(N => N.NotificationId)
+                .NotEmpty().WithMessage("NotificationId Should Not Null")
+                .NotNull().WithMessage("NotificationId Should Not Empty");
 
-                NotificationType.SendNewFriendRequest =>
-                    await unitOFWork.NotificationUnitOFWork.SendFriendRequestNotificationService.GetByIdAsync(id) is not null,
-
-                NotificationType.ConfirmFriendRequest =>
-                    await unitOFWork.NotificationUnitOFWork.ConfirmFriendRequestNotificationService.GetByIdAsync(id) is not null,
-
-                _ => false
-            };
+            RuleFor(N => N.UserIdThatWantToDeleteNotification)
+                .NotEmpty().WithMessage("UserIdThatWantToDeleteNotification Should Not Null")
+                .NotNull().WithMessage("UserIdThatWantToDeleteNotification Should Not Empty");
         }
-
-
+        public void ValidateIdfUserIsFoundOrNot()
+        {
+            RuleFor(U => U.UserIdThatWantToDeleteNotification)
+                .MustAsync(async (Key, Cancelation) => await unitOFWork.IdentityUnitOFWork.UserServices.ManagerUser.FindByIdAsync(Key) is not null)
+                .WithMessage("User Is Not Found");
+        }
 
     }
 }

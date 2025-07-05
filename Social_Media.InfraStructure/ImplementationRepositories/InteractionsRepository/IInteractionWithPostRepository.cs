@@ -19,7 +19,7 @@ namespace Social_Media.InfraStructure.ImplementationRepositories.InteractionsRep
         {
             try
             {
-                return await InteractionWithPost.Where(I => I.PostId == PostIdThatInteractWith).Include(I => I.User).AsNoTracking().OrderByDescending(I => I.CreatedAt).ToListAsync();
+                return await InteractionWithPost.Where(I => I.PostId == PostIdThatInteractWith && !I.IsDeleted).Include(I => I.User).AsNoTracking().OrderByDescending(I => I.CreatedAt).ToListAsync();
             }
             catch (Exception ex)
             {

@@ -41,6 +41,19 @@ namespace Social_Media.Services.ImplementationServices.CommentServices
                 throw;
             }
         }
+
+        public async Task<int> GetPostByCommentId(int CommentId)
+        {
+            try
+            {
+                return await CommentRepository.GetPostByCommentId(CommentId);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex.Message, ex);
+                throw;
+            }
+        }
         //You Can Override Methods Here
     }
 }

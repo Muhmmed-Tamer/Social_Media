@@ -8,8 +8,25 @@ namespace Social_Media.InfraStructure.ImplementationRepositories.NotificationsRe
 {
     public class InteractionNotificationByCommentServices : Services<InteractionNotificationByComment>, IInteractionNotificationByCommentServices
     {
-        public InteractionNotificationByCommentServices(ILogger Logger, IRepository<InteractionNotificationByComment> Repository) : base(Logger, Repository)
+        private readonly IInteractionNotificationByCommentRepository InteractionNotificationByComment;
+        private readonly ILogger Logger;
+        public InteractionNotificationByCommentServices(ILogger Logger, IRepository<InteractionNotificationByComment> Repository, IInteractionNotificationByCommentRepository InteractionNotificationByComment) : base(Logger, Repository)
         {
+            this.InteractionNotificationByComment = InteractionNotificationByComment;
+            this.Logger = Logger;
+        }
+
+        public async Task<InteractionNotificationByComment> GetByNotificationId(int NotificationId)
+        {
+            try
+            {
+                return await InteractionNotificationByComment.GetByNotificationId(NotificationId);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex.Message, ex);
+                throw;
+            }
         }
         //You Can Override Method Here
     }

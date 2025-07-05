@@ -6,5 +6,6 @@ namespace Social_Media.InfraStructure.AbstractsRepositories.CommentRepository
     {
         Task<List<Comment>> GetCommentsByPostIdAsync(int PostId);
         Task<bool> CommentIsExistInAllCommentsOfPost(List<Comment> AllComments, int CommentId);
+        Task<int> GetPostByCommentId(int CommentId);
     }
 }

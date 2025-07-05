@@ -37,6 +37,10 @@ namespace Social_Media.Core.Features.Authentications.Commands.Handlers
                 }
                 if (UserThatWantToLogin is not null)
                 {
+                    if (UserThatWantToLogin.IsDeleted)
+                    {
+                        return BadRequest<JWTTokenResult>("User Is Not Found");
+                    }
                     bool PasswordIsTrue = await UnitOFWork.IdentityUnitOFWork.UserServices.ManagerUser.CheckPasswordAsync(UserThatWantToLogin, request.User_Password);
                     if (PasswordIsTrue)
                     {

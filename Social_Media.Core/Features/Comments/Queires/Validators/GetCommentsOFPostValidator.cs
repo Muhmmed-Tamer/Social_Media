@@ -10,6 +10,7 @@ namespace Social_Media.Core.Features.Comments.Queires.Validators
         public GetCommentsOFPostValidator(IPostServices PostServices)
         {
             this.PostServices = PostServices;
+            ValidateGetCommentsOFPostQuery();
         }
         public void ValidateGetCommentsOFPostQuery()
         {
@@ -20,6 +21,13 @@ namespace Social_Media.Core.Features.Comments.Queires.Validators
             RuleFor(P => P.PostId)
                 .MustAsync(async (Key, CancelationToken) => await PostServices.GetByIdAsync(Key) is not null)
                 .WithMessage("Post Is Not Found");
+
+            RuleFor(P => P.PostId)
+                .MustAsync(async (Key, CancelationToken) =>
+                {
+                    var Post = await PostServices.GetByIdAsync(Key);
+                    return !Post.IsDeleted;
+                }).WithMessage("Post Not Found");
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Social_Media.API.Results_OF_API;
 using Social_Media.Core.Features.Interactions_With_Post.Commands.Models;
@@ -9,7 +8,7 @@ namespace Social_Media.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class InteractionWithPostController : AppControllerBase
     {
         public InteractionWithPostController(IMediator Mediator) : base(Mediator)
@@ -29,10 +28,10 @@ namespace Social_Media.API.Controllers
         }
         [HttpDelete("Delete")]
         public IActionResult Delete(DeleteInteractionWithPostCommand command)
-        { 
-        var Result = Mediator.Send(new DeleteInteractionWithPostCommand(command.Id,command.PostId)).Result; 
+        {
+            var Result = Mediator.Send(new DeleteInteractionWithPostCommand(command.Id, command.PostId)).Result;
 
-            return New_Result(Result);  
+            return New_Result(Result);
         }
     }
 }

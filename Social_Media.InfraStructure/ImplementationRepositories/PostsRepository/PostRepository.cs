@@ -19,7 +19,7 @@ namespace Social_Media.InfraStructure.ImplementationRepositories.PostsRepository
         {
             try
             {
-                return await Post.Where(P => P.UserId == UserId).Include(P => P.ImageOrVideo_Paths)?.OrderByDescending(P => P.CreatedDate).ToListAsync()!;
+                return await Post.Where(P => P.UserId == UserId && !P.IsDeleted).Include(P => P.ImageOrVideo_Paths)?.OrderByDescending(P => P.CreatedDate).ToListAsync()!;
             }
             catch (Exception ex)
             {

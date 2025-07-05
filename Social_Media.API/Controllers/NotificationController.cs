@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Social_Media.API.Results_OF_API;
 using Social_Media.Core.Features.Notifications.Commands.Models;
@@ -9,7 +8,7 @@ namespace Social_Media.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class NotificationController : AppControllerBase
     {
         public NotificationController(IMediator Mediator) : base(Mediator)
@@ -29,10 +28,9 @@ namespace Social_Media.API.Controllers
             return New_Result(Result);
         }
         [HttpDelete("Delete")]
-        public IActionResult DeleteNotification(DeleteNotificationCommand command)
+        public IActionResult DeleteNotification(DeleteNotificationCommand deleteNotificationCommandFRomUser)
         {
-            var Result = Mediator.Send(new DeleteNotificationCommand(command.Id, command.Type)).Result;
-
+            var Result = Mediator.Send(new DeleteNotificationCommand(deleteNotificationCommandFRomUser.NotificationId, deleteNotificationCommandFRomUser.UserIdThatWantToDeleteNotification)).Result;
             return New_Result(Result);
 
         }

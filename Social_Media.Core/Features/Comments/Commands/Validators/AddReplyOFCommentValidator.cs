@@ -2,17 +2,20 @@
 using Social_Media.Core.Features.Comments.Commands.Models;
 using Social_Media.Services.AbstractsServices.CommentServices;
 using Social_Media.Services.AbstractsServices.IdentityServices.IdentityUser;
+using Social_Media.Services.AbstractsServices.PostsServices;
 
 namespace Social_Media.Core.Features.Comments.Commands.Validators
 {
     public class AddReplyOFCommentValidator : AbstractValidator<AddReplyOFCommentCommand>
     {
         private readonly ICommentServices CommentServices;
+        private readonly IPostServices PostServices;
         private readonly IUserServices UserServices;
-        public AddReplyOFCommentValidator(IUserServices UserServices, ICommentServices CommentServices)
+        public AddReplyOFCommentValidator(IUserServices UserServices, ICommentServices CommentServices, IPostServices PostServices)
         {
             this.CommentServices = CommentServices;
             this.UserServices = UserServices;
+            this.PostServices = PostServices;
             ValidateUserAndCommentISFound();
             ValidateReplyOFComment();
         }
@@ -51,6 +54,20 @@ namespace Social_Media.Core.Features.Comments.Commands.Validators
             RuleFor(U => U.CommentId)
                 .MustAsync(async (Key, CancellationToken) => await CommentServices.GetByIdAsync(Key) is not null ? true : false)
                 .WithMessage("Comment does not exist.");
+            RuleFor(U => U.CommentId)
+                .MustAsync(async (Key, Cancelation) =>
+                {
+                    var Comment = await CommentServices.GetByIdAsync(Key);
+                    return !Comment.IsDeleted;
+                }).WithMessage("Comment Is Not Found");
+
+            RuleFor(C => C.CommentId)
+                .MustAsync(async (Key, Cancelation) =>
+                {
+                    var PostId = await CommentServices.GetPostByCommentId(Key);
+                    var Post = await PostServices.GetByIdAsync(PostId);
+                    return !Post.IsDeleted;
+                }).WithMessage("Post Is Not Found");
         }
     }
 }

@@ -5,7 +5,6 @@ using Social_Media.Core.Features.Interaction_With_Comment.Commands.Models;
 using Social_Media.Core.Features.Notifications.Queries.Results;
 using Social_Media.Core.Response_Structure;
 using Social_Media.Data.Models.Interactions;
-using Social_Media.Data.Models.Logging;
 using Social_Media.Data.Models.Notifications;
 using Social_Media.Data.Models.Notifications.Interactions_Notifications;
 
@@ -80,15 +79,16 @@ namespace Social_Media.Core.Features.Interaction_With_Comment.Commands.Handler
                 }
             }
         }
-    
-       public async Task<Response<string>> Handle(DeleteInteractionWithCommentCommand command,CancellationToken cancellationToken)
+
+        public async Task<Response<string>> Handle(DeleteInteractionWithCommentCommand command, CancellationToken cancellationToken)
         {
-            using(var Transaction= await UnitOFWork.InteractionUnitOFWork.InteractionWithCommentServices.BeginTransaction())
+            using (var Transaction = await UnitOFWork.InteractionUnitOFWork.InteractionWithCommentServices.BeginTransaction())
             {
                 try
                 {
-                    InteractionWithComment interactionWithComment =await UnitOFWork.InteractionUnitOFWork.InteractionWithCommentServices.GetByIdAsync(command.Id);
+                    InteractionWithComment interactionWithComment = await UnitOFWork.InteractionUnitOFWork.InteractionWithCommentServices.GetByIdAsync(command.Id);
                     interactionWithComment.IsDeleted = true;
+                    await UnitOFWork.InteractionUnitOFWork.InteractionWithCommentServices.UpdateAsync(interactionWithComment);
                     await UnitOFWork.InteractionUnitOFWork.InteractionWithCommentServices.SaveChangesAsync();
                     await Transaction.CommitAsync();
                     return OK("Interaction With Comment Is Deleted Successfully");
@@ -97,14 +97,11 @@ namespace Social_Media.Core.Features.Interaction_With_Comment.Commands.Handler
                 catch (Exception ex)
                 {
                     await UnitOFWork.InteractionUnitOFWork.InteractionWithCommentServices.RollbackTransaction(Transaction);
-                    Logger.Error(ex, "Error in Delete InteractionWithCommentHandler");
+                    Logger.Error(ex.Message, ex);
                     return BadRequest<string>(ex.Message);
                 }
             }
 
         }
-    
-    
-    
     }
 }

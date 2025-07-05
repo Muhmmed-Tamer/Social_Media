@@ -27,5 +27,18 @@ namespace Social_Media.InfraStructure.ImplementationRepositories.NotificationsRe
                 throw;
             }
         }
+
+        public async Task<PostNotification> GetByNotificationId(int NotificationId)
+        {
+            try
+            {
+                return await PostNotification.Where(PN => PN.NotificationId == NotificationId).FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex.Message, ex);
+                throw;
+            }
+        }
     }
 }

@@ -29,6 +29,19 @@ namespace Social_Media.InfraStructure.ImplementationRepositories.NotificationsRe
                 throw;
             }
         }
+
+        public async Task<PostNotification> GetByNotificationId(int NotificationId)
+        {
+            try
+            {
+                return await PostNotificationRepository.GetByNotificationId(NotificationId);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex.Message, ex);
+                throw;
+            }
+        }
         //You Can Override ethods Here
     }
 }

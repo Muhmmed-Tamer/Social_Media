@@ -8,9 +8,24 @@ namespace Social_Media.InfraStructure.ImplementationRepositories.NotificationsRe
     public class InteractionNotificationByPostRepository : Repository<InteractionNotificationByPost>, IInteractionNotificationByPostRepository
     {
         private readonly DbSet<InteractionNotificationByPost> InteractionNotificationByPost;
+        private readonly ILogger Logger;
         public InteractionNotificationByPostRepository(Social_Media.Data.ContextData Data, ILogger Logger) : base(Data, Logger)
         {
+            this.Logger = Logger;
             this.InteractionNotificationByPost = Data.Set<InteractionNotificationByPost>();
+        }
+
+        public async Task<InteractionNotificationByPost> GetByNotificationId(int NotificationId)
+        {
+            try
+            {
+                return await InteractionNotificationByPost.Where(IN => IN.NotificationId == NotificationId).FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex.Message, ex);
+                throw;
+            }
         }
     }
 }

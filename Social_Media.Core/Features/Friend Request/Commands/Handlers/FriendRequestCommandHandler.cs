@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Serilog;
 using Social_Media.Core.Abstracts_UnitOFWork;
-using Social_Media.Core.Features.Friend_Request.Commands.Models;
 using Social_Media.Core.Features.Friend_Request_Notifications.Commands.Models;
 using Social_Media.Core.Features.Notifications.Queries.Results;
 using Social_Media.Core.Response_Structure;
@@ -13,7 +12,7 @@ namespace Social_Media.Core.Features.Friend_Request_Notifications.Commands.Handl
 {
     public class FriendRequestCommandHandler : ResponseHandler, IRequestHandler<AddFriendRequestCommand, Response<string>>,
         IRequestHandler<ConfirmFriendRequestCommand, Response<string>>,
-        IRequestHandler<RejectFriendRequestCommand, Response<string>>, IRequestHandler<DeleteFriendRequestCommand, Response<string>>
+        IRequestHandler<RejectFriendRequestCommand, Response<string>>
     {
         private readonly IUnitOFWork UnitOFWork;
         private readonly ILogger Logger;
@@ -156,33 +155,6 @@ namespace Social_Media.Core.Features.Friend_Request_Notifications.Commands.Handl
                     return BadRequest<string>(ex.Message);
                 }
             }
-        }
-
-        public async Task<Response<string>> Handle(DeleteFriendRequestCommand request, CancellationToken cancellationToken)
-        {
-            using (var Transaction = await UnitOFWork.FriendUnitOFWork.FriendRequestServices.BeginTransaction())
-            {
-
-                try
-                {
-                    FriendRequest friendRequest = await UnitOFWork.FriendUnitOFWork.FriendRequestServices.GetByIdAsync(request.Id);
-                    friendRequest.IsDeleted = true;
-                    await UnitOFWork.FriendUnitOFWork.FriendRequestServices.SaveChangesAsync();
-                    await Transaction.CommitAsync();
-                    return OK<string>("Friend Request Deleted successfully.");
-
-                }
-                catch (Exception ex)
-                {
-                    await UnitOFWork.FriendUnitOFWork.FriendRequestServices.RollbackTransaction(Transaction);
-                    Logger.Error(ex.Message);
-                    return BadRequest<string>(ex.Message);
-                }
-
-
-
-            }
-
         }
     }
 }

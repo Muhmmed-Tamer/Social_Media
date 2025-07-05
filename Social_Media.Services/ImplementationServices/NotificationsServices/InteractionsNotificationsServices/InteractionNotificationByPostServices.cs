@@ -8,8 +8,25 @@ namespace Social_Media.InfraStructure.ImplementationRepositories.NotificationsRe
 {
     public class InteractionNotificationByPostServices : Services<InteractionNotificationByPost>, IInteractionNotificationByPostServices
     {
-        public InteractionNotificationByPostServices(ILogger Logger, IRepository<InteractionNotificationByPost> Repository) : base(Logger, Repository)
+        private readonly IInteractionNotificationByPostRepository InteractionNotificationByPost;
+        private readonly ILogger Logger;
+        public InteractionNotificationByPostServices(ILogger Logger, IRepository<InteractionNotificationByPost> Repository, IInteractionNotificationByPostRepository interactionNotificationByPost, ILogger logger) : base(Logger, Repository)
         {
+            this.InteractionNotificationByPost = interactionNotificationByPost;
+            this.Logger = logger;
+        }
+
+        public async Task<InteractionNotificationByPost> GetByNotificationId(int NotificationId)
+        {
+            try
+            {
+                return await InteractionNotificationByPost.GetByNotificationId(NotificationId);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex.Message, ex);
+                throw;
+            }
         }
         //You Can Override Methods Here
     }

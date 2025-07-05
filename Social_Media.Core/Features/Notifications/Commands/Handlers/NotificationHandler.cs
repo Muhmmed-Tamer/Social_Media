@@ -1,16 +1,10 @@
 ﻿using MediatR;
 using Serilog;
 using Social_Media.Core.Abstracts_UnitOFWork;
-using Social_Media.Core.Features.Comments.Commands.Models;
-using Social_Media.Core.Features.Comments.Commands.Validators;
-using Social_Media.Core.Features.Comments.Queires.Results;
 using Social_Media.Core.Features.Notifications.Commands.Models;
-using Social_Media.Core.Features.Notifications.Queries.Results;
 using Social_Media.Core.Response_Structure;
 using Social_Media.Data.Enums;
-using Social_Media.Data.Models.Comments;
 using Social_Media.Data.Models.Notifications;
-using Social_Media.Data.Models.Notifications.AddCommentNotification;
 
 namespace Social_Media.Core.Features.Notifications.Commands.Handlers
 {
@@ -26,63 +20,23 @@ namespace Social_Media.Core.Features.Notifications.Commands.Handlers
             UnitOFWork = unitOFWork;
         }
 
-        private async Task<object?> GetObject(DeleteNotificationCommand command)
-        {
-            object? result = command.Type switch
-            {
-                NotificationType.AddPost =>
-                    await UnitOFWork.NotificationUnitOFWork.PostNotificationServices.GetByIdAsync(command.Id),
-
-                NotificationType.SendMessage =>
-                    await UnitOFWork.NotificationUnitOFWork.MessageNotificationServices.GetByIdAsync(command.Id),
-
-                NotificationType.InteractionWithPost =>
-                    await UnitOFWork.InteractionUnitOFWork.InteractionNotificationByPostServices.GetByIdAsync(command.Id),
-
-                NotificationType.InteractionWithStory =>
-                    await UnitOFWork.InteractionUnitOFWork.InteractionNotificationByStoryServices.GetByIdAsync(command.Id),
-
-                NotificationType.InteractionWithComment =>
-                    await UnitOFWork.InteractionUnitOFWork.InteractionWithCommentServices.GetByIdAsync(command.Id),
-
-                NotificationType.AddComment =>
-                    await UnitOFWork.NotificationUnitOFWork.CommentNotificationService.GetByIdAsync(command.Id),
-
-                NotificationType.SendNewFriendRequest =>
-                    await UnitOFWork.NotificationUnitOFWork.SendFriendRequestNotificationService.GetByIdAsync(command.Id),
-
-                NotificationType.ConfirmFriendRequest =>
-                    await UnitOFWork.NotificationUnitOFWork.ConfirmFriendRequestNotificationService.GetByIdAsync(command.Id),
-
-                _ => null
-            };
-
-            return result;
-
-           
-        }
-
-
-
-
-
         public async Task<Response<string>> Handle(DeleteNotificationCommand command, CancellationToken cancellationToken)
         {
-            using(var Transaction = await UnitOFWork.NotificationUnitOFWork.NotificationServices.BeginTransaction())
+            using (var Transaction = await UnitOFWork.NotificationUnitOFWork.NotificationServices.BeginTransaction())
             {
                 try
                 {
-
-                    dynamic Notification = await this.GetObject(command);
-                   
-                    Notification.IsDelete=true;
-
-                    await UnitOFWork.ContextData.SaveChangesAsync();
-                    await Transaction.CommitAsync();
-
-                    return OK("Comment Is Deleted Successfully");
-
-
+                    Notification Notification_ThatWantToDelete = await UnitOFWork.NotificationUnitOFWork.NotificationServices.GetByIdAsync(command.NotificationId);
+                    if (Notification_ThatWantToDelete.UserIdWhoReceivedTheNotification != command.UserIdThatWantToDeleteNotification)
+                    {
+                        return BadRequest<string>("The User Not Have This Notification");
+                    }
+                    Notification_ThatWantToDelete.IsDeleted = true;
+                    await UnitOFWork.NotificationUnitOFWork.NotificationServices.UpdateAsync(Notification_ThatWantToDelete);
+                    await UnitOFWork.NotificationUnitOFWork.NotificationServices.SaveChangesAsync();
+                    await UpdateNotificationType(Notification_ThatWantToDelete);
+                    await UnitOFWork.NotificationUnitOFWork.NotificationServices.CommitTransaction(Transaction);
+                    return OK("Notification Is Deleted Successfully");
                 }
                 catch (Exception ex)
                 {
@@ -91,9 +45,87 @@ namespace Social_Media.Core.Features.Notifications.Commands.Handlers
                     return BadRequest<string>(ex.Message);
 
                 }
-
-
             }
         }
+
+        private async Task UpdateNotificationType(Notification notificationThatWantToDelete)
+        {
+            try
+            {
+                switch (notificationThatWantToDelete.NotificationType)
+                {
+                    case NotificationType.AddPost:
+                        var postNotification = await UnitOFWork.NotificationUnitOFWork.PostNotificationServices.GetByNotificationId(notificationThatWantToDelete.Id);
+                        if (postNotification is not null)
+                        {
+                            postNotification.IsDeleted = true;
+                            await UnitOFWork.NotificationUnitOFWork.PostNotificationServices.UpdateAsync(postNotification);
+                            await UnitOFWork.NotificationUnitOFWork.PostNotificationServices.SaveChangesAsync();
+                        }
+                        break;
+
+                    case NotificationType.SendMessage:
+                        var messageNotification = await UnitOFWork.NotificationUnitOFWork.MessageNotificationServices.GetByNotificationId(notificationThatWantToDelete.Id);
+                        if (messageNotification is not null)
+                        {
+                            messageNotification.IsDeleted = true;
+                            await UnitOFWork.NotificationUnitOFWork.MessageNotificationServices.UpdateAsync(messageNotification);
+                            await UnitOFWork.NotificationUnitOFWork.MessageNotificationServices.SaveChangesAsync();
+                        }
+                        break;
+
+                    case NotificationType.AddComment:
+                        var commentNotification = await UnitOFWork.NotificationUnitOFWork.CommentNotificationService.GetByNotificationId(notificationThatWantToDelete.Id);
+                        if (commentNotification is not null)
+                        {
+                            commentNotification.IsDeleted = true;
+                            await UnitOFWork.NotificationUnitOFWork.CommentNotificationService.UpdateAsync(commentNotification);
+                            await UnitOFWork.NotificationUnitOFWork.CommentNotificationService.SaveChangesAsync();
+                        }
+                        break;
+
+                    case NotificationType.SendNewFriendRequest:
+                        var friendRequestNotification = await UnitOFWork.NotificationUnitOFWork.SendFriendRequestNotificationService.GetByNotificationId(notificationThatWantToDelete.Id);
+                        if (friendRequestNotification is not null)
+                        {
+                            friendRequestNotification.IsDeleted = true;
+                            await UnitOFWork.NotificationUnitOFWork.SendFriendRequestNotificationService.UpdateAsync(friendRequestNotification);
+                            await UnitOFWork.NotificationUnitOFWork.SendFriendRequestNotificationService.SaveChangesAsync();
+                        }
+                        break;
+
+                    case NotificationType.ConfirmFriendRequest:
+                        var confirmFriendRequestNotification = await UnitOFWork.NotificationUnitOFWork.ConfirmFriendRequestNotificationService.GetByNotificationId(notificationThatWantToDelete.Id);
+                        if (confirmFriendRequestNotification is not null)
+                        {
+                            confirmFriendRequestNotification.IsDeleted = true;
+                            await UnitOFWork.NotificationUnitOFWork.ConfirmFriendRequestNotificationService.UpdateAsync(confirmFriendRequestNotification);
+                            await UnitOFWork.NotificationUnitOFWork.ConfirmFriendRequestNotificationService.SaveChangesAsync();
+                        }
+                        break;
+
+                    case NotificationType.InteractionWithPost:
+                        var interactionPostNotification = await UnitOFWork.NotificationUnitOFWork.InteractionNotificationByPostServices.GetByNotificationId(notificationThatWantToDelete.Id);
+                        if (interactionPostNotification is not null)
+                        {
+                            interactionPostNotification.IsDeleted = true;
+                            await UnitOFWork.NotificationUnitOFWork.InteractionNotificationByPostServices.UpdateAsync(interactionPostNotification);
+                            await UnitOFWork.NotificationUnitOFWork.InteractionNotificationByPostServices.SaveChangesAsync();
+                        }
+                        break;
+
+                    default:
+                        break;
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                Logger.Error(ex.Message, ex);
+                throw;
+            }
+        }
+
     }
 }

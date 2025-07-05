@@ -2,7 +2,6 @@
 using Serilog;
 using Social_Media.Core.Abstracts_UnitOFWork;
 using Social_Media.Core.Features.Comments.Commands.Models;
-using Social_Media.Core.Features.Comments.Commands.Validators;
 using Social_Media.Core.Features.Comments.Queires.Results;
 using Social_Media.Core.Features.Notifications.Queries.Results;
 using Social_Media.Core.Response_Structure;
@@ -13,13 +12,13 @@ using Social_Media.Data.Models.Notifications.AddCommentNotification;
 namespace Social_Media.Core.Features.Comments.Commands.Handlers
 {
     public class CommentCommandHandler : ResponseHandler, IRequestHandler<AddCommentToPostCommand, Response<string>>,
-
+        IRequestHandler<AddReplyOFCommentCommand, Response<string>>,
         IRequestHandler<DeleteCommentCommand, Response<string>>
 
     {
         private readonly IUnitOFWork UnitOFWork;
         private readonly ILogger Logger;
-       
+
         public CommentCommandHandler(ILogger Logger, IUnitOFWork UnitOFWork)
         {
             this.UnitOFWork = UnitOFWork;
@@ -100,11 +99,10 @@ namespace Social_Media.Core.Features.Comments.Commands.Handlers
             {
                 try
                 {
-                    
-                    
-                    Comment comment= await UnitOFWork.CommentUnitOFWork.CommentServices.GetByIdAsync(request.Id);
-                    comment.IsDeleted = true;   
-                   
+
+                    Comment comment = await UnitOFWork.CommentUnitOFWork.CommentServices.GetByIdAsync(request.Id);
+                    comment.IsDeleted = true;
+
                     await UnitOFWork.CommentUnitOFWork.CommentServices.SaveChangesAsync();
 
                     await Transaction.CommitAsync();

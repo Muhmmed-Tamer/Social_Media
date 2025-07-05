@@ -4,5 +4,6 @@ namespace Social_Media.InfraStructure.AbstractsRepositories.INotificationsReposi
 {
     public interface ISendFriendRequestNotificationRepository : IRepository<SendFriendRequestNotification>
     {
+        Task<SendFriendRequestNotification> GetByNotificationId(int NotificationId);
     }
 }

@@ -13,5 +13,18 @@ namespace Social_Media.InfraStructure.ImplementationRepositories.NotificationsRe
         {
             this.InteractionNotificationByStory = Data.Set<InteractionNotificationByStory>();
         }
+
+        public async Task<InteractionNotificationByStory> GetByNotificationId(int NotificationId)
+        {
+            try
+            {
+                return await InteractionNotificationByStory.Where(IN => IN.NotificationId == NotificationId).FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex.Message, ex);
+                throw;
+            }
+        }
     }
 }

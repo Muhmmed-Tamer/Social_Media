@@ -1,5 +1,4 @@
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Social_Media.API.Results_OF_API;
 using Social_Media.Core.Features.Comments.Commands.Models;
@@ -9,7 +8,7 @@ namespace Social_Media.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class CommentController : AppControllerBase
     {
         public CommentController(IMediator Mediator) : base(Mediator)
@@ -35,9 +34,9 @@ namespace Social_Media.API.Controllers
             return New_Result(Result);
         }
         [HttpDelete("DeleteComment")]
-        public  IActionResult DeleteCommentByPostId([FromBody]DeleteCommentCommand deleteCommentCommand)
+        public IActionResult DeleteCommentByPostId([FromBody] DeleteCommentCommand deleteCommentCommand)
         {
-            var Result =  Mediator.Send(new DeleteCommentCommand(deleteCommentCommand.Id,deleteCommentCommand.PostId,deleteCommentCommand.UserIdHowWantToDelete)).Result;
+            var Result = Mediator.Send(new DeleteCommentCommand(deleteCommentCommand.Id, deleteCommentCommand.PostId, deleteCommentCommand.UserIdHowWantToDelete)).Result;
 
             return New_Result(Result);
 

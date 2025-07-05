@@ -8,8 +8,25 @@ namespace Social_Media.InfraStructure.ImplementationRepositories.NotificationsRe
 {
     public class MessageNotificationServices : Services<MessageNotification>, IMessageNotificationServices
     {
-        public MessageNotificationServices(ILogger Logger, IRepository<MessageNotification> Repository) : base(Logger, Repository)
+        private readonly IMessageNotificationRepository MessageNotification;
+        private readonly ILogger Logger;
+        public MessageNotificationServices(ILogger Logger, IRepository<MessageNotification> Repository, IMessageNotificationRepository MessageNotification) : base(Logger, Repository)
         {
+            this.MessageNotification = MessageNotification;
+            this.Logger = Logger;
+        }
+
+        public async Task<MessageNotification> GetByNotificationId(int NotificationId)
+        {
+            try
+            {
+                return await MessageNotification.GetByNotificationId(NotificationId);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex.Message, ex);
+                throw;
+            }
         }
         //You Can Override Methods Here
     }

@@ -4,5 +4,6 @@ namespace Social_Media.InfraStructure.AbstractsRepositories.INotificationsReposi
 {
     public interface IInteractionNotificationByStoryRepository : IRepository<InteractionNotificationByStory>
     {
+        Task<InteractionNotificationByStory> GetByNotificationId(int NotificationId);
     }
 }

@@ -33,7 +33,7 @@ namespace Social_Media.Services.ImplementationServices.IdentityServices.Identity
         {
             try
             {
-                return await ManagerUser.Users.Where(P => P.Posts.Any(P => P.Id == PostId)).Select(U => U.Id).FirstAsync();
+                return await ManagerUser.Users.Where(P => P.Posts.Any(P => P.Id == PostId && !P.IsDeleted)).Select(U => U.Id).FirstAsync();
 
             }
             catch (Exception ex)

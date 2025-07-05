@@ -18,6 +18,7 @@ using Social_Media.InfraStructure.AbstractsRepositories.CommentRepository;
 using Social_Media.InfraStructure.AbstractsRepositories.ConnectionRepository;
 using Social_Media.InfraStructure.AbstractsRepositories.IdentityUser_Repository;
 using Social_Media.InfraStructure.AbstractsRepositories.INotificationsRepository;
+using Social_Media.InfraStructure.AbstractsRepositories.INotificationsRepository.InteractionsNotificationsRepository;
 using Social_Media.InfraStructure.AbstractsRepositories.InteractionsRepository;
 using Social_Media.InfraStructure.AbstractsRepositories.Notifications;
 using Social_Media.InfraStructure.AbstractsRepositories.PostsRepository;
@@ -28,6 +29,8 @@ using Social_Media.InfraStructure.ImplementationRepositories.IdentityUser_Reposi
 using Social_Media.InfraStructure.ImplementationRepositories.InteractionsRepository;
 using Social_Media.InfraStructure.ImplementationRepositories.NotificationsRepository;
 using Social_Media.InfraStructure.ImplementationRepositories.NotificationsRepository.AddFriendRequest_Notification;
+using Social_Media.InfraStructure.ImplementationRepositories.NotificationsRepository.InteractionsNotificationsRepository;
+using Social_Media.InfraStructure.ImplementationRepositories.NotificationsRepository.MessagesNotificationRepository;
 using Social_Media.InfraStructure.ImplementationRepositories.PostsRepository;
 using Social_Media.InfraStructure.ImplementationRepositories.UserConnection;
 using Social_Media.Repository;
@@ -59,6 +62,12 @@ namespace Social_Media.InfraStructure.DependencyInjectionOFInfraStructure
             Services.AddScoped<ICommentNotificationRepository, CommentNotificationRepository>();
             Services.AddScoped<IRepository<PostNotification>, Repository<PostNotification>>();
             Services.AddScoped<IPostNotificationRepository, PostNotificationRepository>();
+            Services.AddScoped<ICommentNotificationRepository, CommentNotificationRepository>();
+            Services.AddScoped<IInteractionWithCommentRepository, InteractionWithCommentRepository>();
+            Services.AddScoped<IInteractionNotificationByCommentRepository, InteractionNotificationByCommentRepository>();
+            Services.AddScoped<IInteractionNotificationByStoryRepository, InteractionNotificationByStoryRepository>();
+            Services.AddScoped<IInteractionNotificationByPostRepository, InteractionNotificationByPostRepository>();
+            Services.AddScoped<IMessageNotificationRepository, MessageNotificationRepository>();
             Services.AddScoped<INotificationRepository, NotificationRepository>();
             #endregion
             #region Interactions

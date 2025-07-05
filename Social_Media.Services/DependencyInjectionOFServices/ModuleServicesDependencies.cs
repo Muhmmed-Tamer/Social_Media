@@ -94,6 +94,12 @@ namespace Social_Media.Services.DependencyInjectionOFServices
             Services.AddScoped<IServices<SendFriendRequestNotification>, Services<SendFriendRequestNotification>>();
             Services.AddScoped<IServices<ConfirmFriendRequestNotification>, Services<ConfirmFriendRequestNotification>>();
             Services.AddScoped<INotificationServices, NotificationServices>();
+            Services.AddScoped<IPostNotificationServices, PostNotificationServices>();
+            Services.AddScoped<ICommentNotificationServices, CommentNotificationServices>();
+            Services.AddScoped<IMessageNotificationServices, MessageNotificationServices>();
+            Services.AddScoped<IInteractionNotificationByPostServices, InteractionNotificationByPostServices>();
+            Services.AddScoped<IInteractionNotificationByCommentServices, InteractionNotificationByCommentServices>();
+            Services.AddScoped<IInteractionNotificationByStoryServices, InteractionNotificationByStoryServices>();
             #endregion
             #region Interactions
             Services.AddScoped<IInteractionWithStoryServices, InteractionWithStoryServices>();

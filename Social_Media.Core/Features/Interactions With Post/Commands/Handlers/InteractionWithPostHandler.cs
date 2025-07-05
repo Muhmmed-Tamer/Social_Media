@@ -6,12 +6,11 @@ using Social_Media.Core.Features.Notifications.Queries.Results;
 using Social_Media.Core.Response_Structure;
 using Social_Media.Data.Models.Interactions;
 using Social_Media.Data.Models.Notifications;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Social_Media.Core.Features.Interactions_With_Post.Commands.Handlers
 {
     public class InteractionWithPostHandler : ResponseHandler, IRequestHandler<AddInteractionWithPostCommand, Response<string>>
-      ,IRequestHandler<DeleteInteractionWithPostCommand,Response<string>>
+      , IRequestHandler<DeleteInteractionWithPostCommand, Response<string>>
     {
         private readonly ILogger Logger;
         private readonly IUnitOFWork UnitOFWork;
@@ -78,24 +77,20 @@ namespace Social_Media.Core.Features.Interactions_With_Post.Commands.Handlers
                 {
                     InteractionWithPost interactionWithPost = await UnitOFWork.InteractionUnitOFWork.InteractionWithPostServices.GetByIdAsync(command.Id);
                     interactionWithPost.IsDeleted = true;
+                    await UnitOFWork.InteractionUnitOFWork.InteractionWithPostServices.UpdateAsync(interactionWithPost);
                     await UnitOFWork.InteractionUnitOFWork.InteractionWithPostServices.SaveChangesAsync();
                     await Transaction.CommitAsync();
-
                     return OK<string>("Interaction With Post Deleted Successfully");
-
                 }
                 catch (Exception ex)
                 {
                     await UnitOFWork.InteractionUnitOFWork.InteractionWithPostServices.RollbackTransaction(Transaction);
-                    Logger.Error("Error when Try to Delete Interaction With Post");
+                    Logger.Error(ex.Message, ex);
                     return BadRequest<string>(ex.Message);
 
                 }
             }
 
         }
-
-
-       
     }
 }

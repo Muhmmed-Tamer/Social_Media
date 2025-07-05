@@ -16,6 +16,7 @@ namespace Social_Media.Core.Features.Comments.Commands.Validators
             ValidateCommentContent();
             ValidatePostIsFound();
             ValidateUserIsFound();
+            ValidatePostIsNotDeleted();
         }
 
         public void ValidateCommentContent()
@@ -33,6 +34,15 @@ namespace Social_Media.Core.Features.Comments.Commands.Validators
         {
             RuleFor(C => C.UserId).MustAsync(async (Key, CancelationToken) => await UserServices.ManagerUser.FindByIdAsync(Key) is not null ? true : false)
                 .WithMessage("User Is Not Found");
+        }
+        public void ValidatePostIsNotDeleted()
+        {
+            RuleFor(P => P.PostId)
+                 .MustAsync(async (Key, CancelationToken) =>
+                 {
+                     var Post = await PostServices.GetByIdAsync(Key);
+                     return !Post.IsDeleted;
+                 }).WithMessage("Post Not Found");
         }
     }
 }

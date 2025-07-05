@@ -5,5 +5,6 @@ namespace Social_Media.InfraStructure.AbstractsRepositories.INotificationsReposi
     public interface ICommentNotificationRepository : IRepository<CommentNotification>
     {
         Task BulkInsertAsync(List<CommentNotification> CommentNotifications);
+        Task<CommentNotification> GetByNotificationId(int NotificationId);
     }
 }

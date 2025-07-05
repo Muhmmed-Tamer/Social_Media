@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Social_Media.API.Results_OF_API;
 using Social_Media.Core.Features.Posts.Commands.Models;
@@ -9,7 +8,7 @@ namespace Social_Media.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class PostController : AppControllerBase
     {
         public PostController(IMediator Mediator) : base(Mediator)
@@ -33,20 +32,13 @@ namespace Social_Media.API.Controllers
             var Result = Mediator.Send(new GetPostsOFUserQuery(UserId)).Result;
             return New_Result(Result);
         }
-        [HttpDelete("DeleteImageOrVideoPost")]
-        public async Task<IActionResult> DeleteImageOrVideoPost([FromBody]DeleteImageOrVideoPostCommand deleteImageOrVideoPostCommand)
+        [HttpDelete("DeletetPost")]
+        public async Task<IActionResult> DelteTextPost([FromBody] DeletePostCommand deleteTextPostCommand)
         {
-            var Result =  Mediator.Send(new DeleteImageOrVideoPostCommand(deleteImageOrVideoPostCommand.Id)).Result;
-
-            return New_Result(Result);
-        }
-        [HttpDelete("DeleteTextPost")]
-        public async Task<IActionResult> DelteTextPost([FromBody]DeleteTextPostCommand deleteTextPostCommand,CancellationToken cancellationToken)
-        {
-            var Result = Mediator.Send(new DeleteTextPostCommand(deleteTextPostCommand.Id,deleteTextPostCommand.UserIdWhoWantToDelete)).Result; 
+            var Result = Mediator.Send(new DeletePostCommand(deleteTextPostCommand.Id, deleteTextPostCommand.UserIdWhoWantToDelete)).Result;
             return New_Result(Result);
 
         }
-         
+
     }
 }

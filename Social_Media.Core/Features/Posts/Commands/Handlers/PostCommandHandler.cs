@@ -1,6 +1,5 @@
 ﻿using ConstantStatementInAllProject.Files;
 using MediatR;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Serilog;
 using Social_Media.Core.Abstracts_UnitOFWork;
 using Social_Media.Core.Features.Notifications.Queries.Results;
@@ -14,7 +13,8 @@ using Social_Media.Data.Models.Posts;
 namespace Social_Media.Core.Features.Posts.Commands.Handlers
 {
     public class PostCommandHandler : ResponseHandler, IRequestHandler<AddTextPostCommand, Response<string>>,
-        IRequestHandler<AddImageOrVideoPostCommand, Response<string>>
+        IRequestHandler<AddImageOrVideoPostCommand, Response<string>>,
+        IRequestHandler<DeletePostCommand, Response<string>>
     {
         private readonly ILogger Logger;
         private readonly IUnitOFWork UnitOFWork;
@@ -154,35 +154,7 @@ namespace Social_Media.Core.Features.Posts.Commands.Handlers
                 }
             }
         }
-
-        public async Task<Response<string>> Handle(DeleteImageOrVideoPostCommand request, CancellationTokenSource cancellationToken)
-        {
-            using(var Transaction = await UnitOFWork.PostUnitOFWork.ImageOrVideoPathServices.BeginTransaction())
-            {
-
-                try
-                {
-
-                 ImageOrVideoPath imageOrVideoPath = await UnitOFWork.PostUnitOFWork.ImageOrVideoPathServices.GetByIdAsync(request.Id); 
-                    imageOrVideoPath.IsDeleted = true;
-                    await UnitOFWork.PostUnitOFWork.ImageOrVideoPathServices.SaveChangesAsync();
-                    
-                    await Transaction.CommitAsync();
-
-                    return OK("ImageOrVideoPost Is Deleted Successfully");
-
-
-                }
-                catch (Exception ex)
-                {
-                    Logger.Error(ex.Message);
-                    await UnitOFWork.PostUnitOFWork.ImageOrVideoPathServices.RollbackTransaction(Transaction);
-                    return BadRequest<string>(ex.Message);
-
-                }
-            }
-        }
-        public async Task<Response<string>> Handle(DeleteTextPostCommand request ,CancellationToken cancellationToken)
+        public async Task<Response<string>> Handle(DeletePostCommand request, CancellationToken cancellationToken)
         {
             using (var Transaction = await UnitOFWork.PostUnitOFWork.PostServices.BeginTransaction())
             {
@@ -192,7 +164,7 @@ namespace Social_Media.Core.Features.Posts.Commands.Handlers
 
                     Post post = await UnitOFWork.PostUnitOFWork.PostServices.GetByIdAsync(request.Id);
                     post.IsDeleted = true;
-                        
+
                     await UnitOFWork.PostUnitOFWork.PostServices.SaveChangesAsync();
                     await Transaction.CommitAsync();
 
@@ -205,14 +177,14 @@ namespace Social_Media.Core.Features.Posts.Commands.Handlers
                 {
                     Logger.Error(ex.Message);
                     await UnitOFWork.PostUnitOFWork.PostServices.RollbackTransaction(Transaction);
-                    return BadRequest<string>(ex.Message);  
+                    return BadRequest<string>(ex.Message);
                 }
-            
-            
-            } 
+
+
+            }
 
         }
-    
+
     }
 
 

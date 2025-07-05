@@ -28,5 +28,18 @@ namespace Social_Media.Services.ImplementationServices.NotificationsServices
                 throw;
             }
         }
+
+        public async Task<CommentNotification> GetByNotificationId(int NotificationId)
+        {
+            try
+            {
+                return await CommentNotificationRepository.GetByNotificationId(NotificationId);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex.Message, ex);
+                throw;
+            }
+        }
     }
 }

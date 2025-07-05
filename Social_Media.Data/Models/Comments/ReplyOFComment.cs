@@ -14,6 +14,7 @@ namespace Social_Media.Data.Models.Comments
         public string UserIdThatWriteAComment { get; set; }
         [ForeignKey("UserThatWriteAReplyOFComment")]
         public string UserIdThatWriteAReplyOFComment { get; set; }
+        public bool IsDeleted { get; set; } = false;
         // Navigation properties
         public virtual Comment? Comment { get; set; }
         public virtual ApplicationUser? UserThatWriteAComment { get; set; }
