@@ -39,5 +39,17 @@ namespace Social_Media.API.Controllers
             var Result = Mediator.Send(new GetMessagesBetweenTwoUsersQuery(SenderId, ReceiverId)).Result;
             return New_Result(Result);
         }
+        [HttpDelete("Message/Delete")]
+        public IActionResult DeleteMessage([FromBody] DeleteMessageCommand deleteMessageCommand)
+        {
+            var Result = Mediator.Send(new DeleteMessageCommand(deleteMessageCommand.Id, deleteMessageCommand.SenderId, deleteMessageCommand.ReceiverId,deleteMessageCommand.UserWhoWantToDelete)).Result;
+            return New_Result(Result);
+        }
+        [HttpPatch("Edit/TextMessage")] 
+        public IActionResult UpdateMessage(UpdateMessageCommand updateMessageCommand)
+        {
+            var Result = Mediator.Send(new UpdateMessageCommand(updateMessageCommand.Id, updateMessageCommand.Content, updateMessageCommand.SenderId, updateMessageCommand.ReceiverId, updateMessageCommand.UserWhoWantToDelete)).Result;
+            return New_Result(Result);
+        }
     }
 }

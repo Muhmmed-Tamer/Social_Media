@@ -13,7 +13,7 @@ namespace Social_Media.Core.Features.Comments.Commands.Handlers
 {
     public class CommentCommandHandler : ResponseHandler, IRequestHandler<AddCommentToPostCommand, Response<string>>,
         IRequestHandler<AddReplyOFCommentCommand, Response<string>>,
-        IRequestHandler<DeleteCommentCommand, Response<string>>
+        IRequestHandler<DeleteCommentCommand, Response<string>>, IRequestHandler<UpdateCommentCommand, Response<string>>
 
     {
         private readonly IUnitOFWork UnitOFWork;
@@ -117,6 +117,34 @@ namespace Social_Media.Core.Features.Comments.Commands.Handlers
                     Logger.Error(ex.Message, ex);
                     return BadRequest<string>(ex.Message);
                 }
+            }
+        }
+
+        public async Task<Response<string>> Handle(UpdateCommentCommand request, CancellationToken cancellationToken)
+        {
+            using(var Transaction = await UnitOFWork.CommentUnitOFWork.CommentServices.BeginTransaction() )
+            {
+
+                try
+                {
+                    Comment comment= await UnitOFWork.CommentUnitOFWork.CommentServices.GetByIdAsync(request.Id);
+                    comment.IsUpdated = true;
+                    comment.CreatedAt = DateTimeOffset.Now;
+                    comment.Content= request.Content;
+
+                    await UnitOFWork.CommentUnitOFWork.CommentServices.SaveChangesAsync();
+                    await Transaction.CommitAsync();
+                    return OK("Edit Comment Successfully");
+
+                }
+                catch(Exception ex)
+                {
+                    await UnitOFWork.CommentUnitOFWork.CommentServices.RollbackTransaction(Transaction);
+                    Logger.Error(ex.Message, ex);
+                    return BadRequest<string>(ex.Message);
+
+                }
+
             }
         }
     }

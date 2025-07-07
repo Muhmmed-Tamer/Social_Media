@@ -14,7 +14,8 @@ namespace Social_Media.Core.Features.Posts.Commands.Handlers
 {
     public class PostCommandHandler : ResponseHandler, IRequestHandler<AddTextPostCommand, Response<string>>,
         IRequestHandler<AddImageOrVideoPostCommand, Response<string>>,
-        IRequestHandler<DeletePostCommand, Response<string>>
+        IRequestHandler<DeletePostCommand, Response<string>>, IRequestHandler<UpdatePostCommand, Response<string>>,
+        IRequestHandler<UpdateMediaPostCommand, Response<string>>
     {
         private readonly ILogger Logger;
         private readonly IUnitOFWork UnitOFWork;
@@ -184,6 +185,93 @@ namespace Social_Media.Core.Features.Posts.Commands.Handlers
             }
 
         }
+
+        public async Task<Response<string>> Handle(UpdatePostCommand request,CancellationToken cancellation)
+        {
+            using( var Transaction = await UnitOFWork.PostUnitOFWork.PostServices.BeginTransaction())
+            {
+                try
+                {
+                    var post = await UnitOFWork.PostUnitOFWork.PostServices.GetByIdAsync(request.Id);
+                    post.IsUpdated = true;
+                    post.CreatedDate = DateTimeOffset.Now;
+                    post.Content=request.Content;
+
+                    await UnitOFWork.PostUnitOFWork.PostServices.SaveChangesAsync();
+                    await Transaction.CommitAsync();
+                    return OK("Updated Successfully");
+
+                }
+                catch( Exception ex)
+                {
+                    await UnitOFWork.PostUnitOFWork.PostServices.RollbackTransaction(Transaction);
+                    Logger.Error(ex.Message);
+                    return BadRequest<string>(ex.Message);
+                }
+            }
+
+        }
+
+        public async Task<Response<string>> Handle(UpdateMediaPostCommand request, CancellationToken cancellation)
+        {
+            using (var Transaction = await UnitOFWork.PostUnitOFWork.ImageOrVideoPathServices.BeginTransaction())
+            {
+                try
+                {
+                 
+                    var post = await UnitOFWork.PostUnitOFWork.PostServices.GetByIdAsync(request.Id);
+                    post.IsUpdated = true;
+                    post.CreatedDate = DateTimeOffset.Now;
+                    post.Content = request.Content;
+                    post.Caption = request.Caption;
+                    (List<string> PathsOFImagesOrVideos, bool IsStoredSuccessfully) = (new List<string>(), false);
+                    (PathsOFImagesOrVideos, IsStoredSuccessfully) = await UnitOFWork.ConfigurationOfFilesUnitOFWork.FileServices.GeneratePathOFFiles(request.Media , UnitOFWork.ConfigurationOfFilesUnitOFWork.ConfigurationOFPostImageServices.MaxSize(), UnitOFWork.ConfigurationOfFilesUnitOFWork.ConfigurationOFPostImageServices.AllowedExtension(),
+                      UnitOFWork.ConfigurationOfFilesUnitOFWork.ConfigurationOFPostImageServices.DirectoryThatStoreFileIn(), UnitOFWork.ConfigurationOfFilesUnitOFWork.ConfigurationOFPostVideoServices.MaxSize(), UnitOFWork.ConfigurationOfFilesUnitOFWork.ConfigurationOFPostVideoServices.DirectoryThatStoreFileIn(),
+                      UnitOFWork.ConfigurationOfFilesUnitOFWork.ConfigurationOFPostVideoServices.AllowedExtension());
+                    if (PathsOFImagesOrVideos.Contains(FilesConstants.ErrorExtensionFiles) || PathsOFImagesOrVideos.Contains(FilesConstants.ErrorSizeFiles) && !IsStoredSuccessfully)
+                    {
+                        
+                        return BadRequest<string>(PathsOFImagesOrVideos.Select(E => E).ToString()!);
+                    }
+                    else if (!IsStoredSuccessfully)
+                    {
+                       
+                        return BadRequest<string>(PathsOFImagesOrVideos.Select(E => E).ToString()!);
+                    }
+                    List<ImageOrVideoPath> AllPathOFImagesOrVideos = PathsOFImagesOrVideos.Select(Path => new ImageOrVideoPath()
+                    {
+                        PostId =request.Id,
+                        Image_Or_VideoPath = Path
+                    }).ToList();
+
+
+
+                    foreach (var item in post.ImageOrVideo_Paths)
+                    {
+                        item.IsDeleted = true;
+                    }
+                    foreach(var item in AllPathOFImagesOrVideos)
+                    {
+                        post.ImageOrVideo_Paths.Add(item);
+                    }
+                    await UnitOFWork.PostUnitOFWork.PostServices.SaveChangesAsync();
+                    await Transaction.CommitAsync();
+                    return OK("Updated Successfully");
+                    }
+                    
+
+                
+                catch (Exception ex)
+                {
+                    
+                    await Transaction.RollbackAsync();
+                    Logger.Error(ex.Message);
+                    return BadRequest<string>(ex.Message);
+                }
+
+            }
+        }
+
 
     }
 

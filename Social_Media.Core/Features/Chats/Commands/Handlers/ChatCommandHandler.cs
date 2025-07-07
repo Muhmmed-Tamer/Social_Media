@@ -14,6 +14,7 @@ namespace Social_Media.Core.Features.Chats.Commands.Handlers
 {
     public class ChatCommandHandler : ResponseHandler, IRequestHandler<AddTextMessageCommand, Response<string>>,
         IRequestHandler<AddAudioMessageCommand, Response<string>>, IRequestHandler<AddMediaMessageCommand, Response<string>>
+        ,IRequestHandler<DeleteMessageCommand,Response<string>>, IRequestHandler<UpdateMessageCommand, Response<string>>
     {
         private readonly IUnitOFWork UnitOFWork;
         private readonly ILogger Logger;
@@ -174,6 +175,55 @@ namespace Social_Media.Core.Features.Chats.Commands.Handlers
                     return BadRequest<string>(ex.Message);
                 }
             }
+        }
+
+        public async Task<Response<string>> Handle(DeleteMessageCommand request,CancellationToken cancellationToken)
+        {
+            using(var Transaction= await UnitOFWork.ChatUnitOFWork.MessageServices.BeginTransaction())
+            {
+                try
+                {
+                    Message message= await UnitOFWork.ChatUnitOFWork.MessageServices.GetByIdAsync(request.Id);
+                    message.IsDeleted = true;
+                    await UnitOFWork.ChatUnitOFWork.MessageServices.SaveChangesAsync();
+                    await Transaction.CommitAsync();
+                    return OK("Deleted Successfully");
+
+                }
+                catch (Exception ex)
+                {
+                    await UnitOFWork.ChatUnitOFWork.MessageServices.RollbackTransaction(Transaction);
+                    Logger.Error(ex.Message, ex);
+                    return BadRequest<string>(ex.Message);
+                }
+            }
+
+        }
+
+        public async Task<Response<string>> Handle(UpdateMessageCommand request ,CancellationToken cancellationToken)
+        { 
+            using(var Transaction= await UnitOFWork.ChatUnitOFWork.MessageServices.BeginTransaction())
+            {
+                try
+                {
+                    Message message = await UnitOFWork.ChatUnitOFWork.MessageServices.GetByIdAsync(request.Id);
+                    message.IsUpdated = true;   
+                    message.Content=request.Content;
+                    message.CreatedAt = DateTimeOffset.UtcNow;
+                    await UnitOFWork.ChatUnitOFWork.MessageServices.SaveChangesAsync();
+                    await Transaction.CommitAsync();
+                    return OK("Updated Successfully");
+
+                }
+                catch(Exception ex)
+                {
+                    await UnitOFWork.ChatUnitOFWork.MessageServices.RollbackTransaction(Transaction);
+                    Logger.Error(ex.Message, ex);
+                    return BadRequest<string>(ex.Message);
+
+                }
+            }
+
         }
         private async Task RealTimeNotification(object TypeOFMessage, Notification Notification, string ReceiverId)
         {

@@ -8,6 +8,8 @@ namespace Social_Media.Data.Models.Chat
         [ForeignKey("Message")]
         public int MessageId { get; set; }
         public string MediaPath { get; set; }
+
+     public bool IsDeleted { get; set; }=false;
         public virtual Message? Message { get; set; }
     }
 }

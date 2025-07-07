@@ -58,5 +58,23 @@ namespace Social_Media.API.Controllers
 
             return New_Result(Result);
         }
+        [HttpPatch("Update/Name")]
+        public IActionResult UpdateName(UpdateUserNameCommand updateNameCommand) { 
+        
+        var Result = Mediator.Send(new UpdateUserNameCommand(updateNameCommand.UserId,updateNameCommand.Name)).Result;  
+            return new JsonResult(Result);
+        }
+        [HttpPatch("Update/Photo")]
+        public IActionResult UpdatePhoto(UpdateUserPhotoCommand updatePhotoCommand)
+        {
+            var Result = Mediator.Send(new UpdateUserPhotoCommand(updatePhotoCommand.UserId,updatePhotoCommand.Photo)).Result;
+            return New_Result(Result);
+        }
+        [HttpPatch("Update/Description")]
+        public IActionResult UpdateDescription(UpdateUserDescriptionCommand updateDescriptionCommand)
+        {
+            var Result = Mediator.Send(new UpdateUserDescriptionCommand(updateDescriptionCommand.UserId,updateDescriptionCommand.Description)).Result;
+            return New_Result(Result);
+        }
     }
 }

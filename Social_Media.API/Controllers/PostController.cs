@@ -32,13 +32,28 @@ namespace Social_Media.API.Controllers
             var Result = Mediator.Send(new GetPostsOFUserQuery(UserId)).Result;
             return New_Result(Result);
         }
-        [HttpDelete("DeletetPost")]
-        public async Task<IActionResult> DelteTextPost([FromBody] DeletePostCommand deleteTextPostCommand)
+        [HttpDelete("Delete/Post")]
+        public async Task<IActionResult> DeletePost([FromBody] DeletePostCommand deleteTextPostCommand)
         {
             var Result = Mediator.Send(new DeletePostCommand(deleteTextPostCommand.Id, deleteTextPostCommand.UserIdWhoWantToDelete)).Result;
             return New_Result(Result);
 
         }
+        [HttpPut("Update/TextPost")]
+        public async Task<IActionResult> UpdateTextPost([FromBody] UpdatePostCommand updatePost)
+        {
+            var Result = Mediator.Send(new UpdatePostCommand(updatePost.Id,updatePost.Content,updatePost.UserId,updatePost.Privacy)).Result;   
+
+            return New_Result(Result);
+        }
+        [HttpPut("Update/MediaPost")]
+        public async Task<IActionResult> UpdateMediaPost([FromBody] UpdateMediaPostCommand command)
+        {
+
+            var Result = Mediator.Send(new UpdateMediaPostCommand(command.Id,command.Content,command.Caption,command.UserId,command.Privacy,command.Media)).Result;
+            return New_Result(Result);
+        }
+
 
     }
 }

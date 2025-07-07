@@ -29,7 +29,7 @@ namespace Social_Media.Core.Features.Users.Commands.Validators
 
                 var user = await unitOFWork.IdentityUnitOFWork.UserServices.ManagerUser.FindByIdAsync(Key);
 
-                if (user != null) return true;
+                if (user != null&&!user.IsDeleted) return true;
                 else return false;
                 
                 

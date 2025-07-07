@@ -11,7 +11,11 @@ using Social_Media.Data.Identity;
 namespace Social_Media.Core.Features.Users.Commands.Handlers
 {
     public class UserCommandHandler : ResponseHandler, IRequestHandler<AddUserCommand, Response<string>>,
-        IRequestHandler<ResetPasswordByEmailCommand, Response<string>>, IRequestHandler<DeleteUserCommand, Response<string>>
+        IRequestHandler<ResetPasswordByEmailCommand, Response<string>>, IRequestHandler<DeleteUserCommand, Response<string>>,
+         IRequestHandler<UpdateUserPhotoCommand, Response<string>>,
+        IRequestHandler<UpdateUserNameCommand, Response<string>>,
+          IRequestHandler<UpdateUserDescriptionCommand, Response<string>>
+
     {
         private readonly ILogger Logger;
         private readonly IUnitOFWork UnitOFWork;
@@ -152,7 +156,83 @@ namespace Social_Media.Core.Features.Users.Commands.Handlers
                 throw;
             }
         }
+        public async Task<Response<string>> Handle(UpdateUserNameCommand request,CancellationToken cancellationToken)
+        {
+            try
+            {
+                var user = await UnitOFWork.IdentityUnitOFWork.UserServices.ManagerUser.FindByIdAsync(request.UserId);
 
+                if (!string.IsNullOrWhiteSpace(request.Name.FirstNameInEnglish))
+                    user.Name.FirstNameInEnglish = request.Name.FirstNameInEnglish;
+
+                if (!string.IsNullOrWhiteSpace(request.Name.LastNameInEnglish))
+                    user.Name.LastNameInEnglish = request.Name.LastNameInEnglish;
+
+                if (!string.IsNullOrWhiteSpace(request.Name.FirstNameInAabic))
+                    user.Name.FirstNameInAabic = request.Name.FirstNameInAabic;
+
+                if (!string.IsNullOrWhiteSpace(request.Name.LastNameInArabic))
+                    user.Name.LastNameInArabic = request.Name.LastNameInArabic;
+
+                await UnitOFWork.IdentityUnitOFWork.UserServices.ManagerUser.UpdateAsync(user);
+                return OK("Updated Successfully");
+
+            }
+            catch(Exception ex)
+            {
+                Logger.Error(ex, ex.Message); 
+                return BadRequest<string>(ex.Message);
+            }
+        }
+        public async Task<Response<string>> Handle(UpdateUserPhotoCommand request,CancellationToken cancellationToken)
+        {
+            try
+            {
+                var user = await UnitOFWork.IdentityUnitOFWork.UserServices.ManagerUser.FindByIdAsync(request.UserId);
+                (string path, bool isStoredSuccessfully) = await UnitOFWork.ConfigurationOfFilesUnitOFWork.FileServices.GeneratePathOFFile(request.Photo, UnitOFWork.ConfigurationOfFilesUnitOFWork.ConfigurationOFUserImageServices.MaxSize(), UnitOFWork.ConfigurationOfFilesUnitOFWork.ConfigurationOFUserImageServices.DirectoryThatStoreFileIn(), UnitOFWork.ConfigurationOfFilesUnitOFWork.ConfigurationOFUserImageServices.AllowedExtension());
+
+                if ((path == FilesConstants.ErrorExtensionFiles || path == FilesConstants.ErrorSizeFiles) || !isStoredSuccessfully)
+                {
+
+                    return BadRequest<string>(path); 
+                }
+                else
+                {
+                  
+                    user.PicturePath = path;
+                    await UnitOFWork.IdentityUnitOFWork.UserServices.ManagerUser.UpdateAsync(user);
+                    return OK("Updated Successfully");
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, ex.Message);
+                return BadRequest<string>(ex.Message);
+
+            }
+        }
+
+        public async Task<Response<string>> Handle(UpdateUserDescriptionCommand request,CancellationToken cancellationToken)
+        {
+            try
+            {
+                var user = await UnitOFWork.IdentityUnitOFWork.UserServices.ManagerUser.FindByIdAsync(request.UserId);
+                user.DescriptionOFProfile = request.Description;
+                await UnitOFWork.IdentityUnitOFWork.UserServices.ManagerUser.UpdateAsync(user);
+                return OK("Updated Successfully");
+
+
+
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, ex.Message);
+                return BadRequest<string>(ex.Message);  
+            }
+
+        }
 
     }
 

@@ -41,5 +41,13 @@ namespace Social_Media.API.Controllers
             return New_Result(Result);
 
         }
+        [HttpPatch("Comment/Edit")]
+        public IActionResult EditComment([FromBody] UpdateCommentCommand editCommentCommand)
+        {
+            var Result = Mediator.Send(new UpdateCommentCommand(editCommentCommand.Id,editCommentCommand.UserIdWhoWantToUpdate,editCommentCommand.PostId,editCommentCommand.Content)).Result;
+        
+        return New_Result(Result);  
+        }
+        
     }
 }
