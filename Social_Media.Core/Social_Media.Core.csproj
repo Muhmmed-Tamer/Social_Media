@@ -1,0 +1,73 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Mapping\InteractionNotificationWithComment Mapping\**" />
+    <EmbeddedResource Remove="Mapping\InteractionNotificationWithComment Mapping\**" />
+    <None Remove="Mapping\InteractionNotificationWithComment Mapping\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ConstantStatementInAllProject\ConstantStatementInAllProject.csproj" />
+    <ProjectReference Include="..\Social_Media.Data\Social_Media.Data.csproj" />
+    <ProjectReference Include="..\Social_Media.RealTimeServices\Social_Media.RealTimeServices.csproj" />
+    <ProjectReference Include="..\Social_Media.Services\Social_Media.Services.csproj" />
+	 
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Features\Authentications\Queries\Results\" />
+    <Folder Include="Features\Friend Request\Queries\Handlers\" />
+    <Folder Include="Features\Friend Request\Queries\Models\" />
+    <Folder Include="Features\Friend Request\Queries\Results\" />
+    <Folder Include="Features\Friends\Commands\Handlers\" />
+    <Folder Include="Features\Friends\Commands\Models\" />
+    <Folder Include="Features\Friends\Commands\Validators\" />
+    <Folder Include="Features\Friends\Queries\Results\" />
+    <Folder Include="Features\Notifications\Commands\Handlers\" />
+    <Folder Include="Features\Notifications\Commands\Models\" />
+    <Folder Include="Features\Notifications\Commands\Validators\" />
+    <Folder Include="Features\Posts\Queries\Handlers\" />
+    <Folder Include="Features\Posts\Queries\Models\" />
+    <Folder Include="Features\Posts\Queries\Results\" />
+    <Folder Include="Features\Story\Queries\" />
+    <Folder Include="Mapping\AddNewCommentNotification Mapping\AddNewCommentNotification Queires Mapping\" />
+    <Folder Include="Mapping\AddNewFriendRequestNotification Mapping\AddNewFriendRequestNotification Mpping Queires\" />
+    <Folder Include="Mapping\AddNewPost Mapping\AddNewPost Mapping Queries\" />
+    <Folder Include="Mapping\Authentication Mapping\Authentication Mapping Queires\" />
+    <Folder Include="Mapping\ConfirmFriendRequest Notification Mapping\ConfirmFriendRequest Notification Mapping Queries\" />
+    <Folder Include="Mapping\Friend Mapping\Friend Mapping Queries\" />
+    <Folder Include="Mapping\FriendRequest Mapping\FriendRequestNotification Mapping Queries\" />
+    <Folder Include="Mapping\InteractionNotificationWithCommentMapping\InteractionNotificationWithCommentMappingQueires\" />
+    <Folder Include="Mapping\InteractionWithPost Mapping\InteractionWithPost Mapping Queries\" />
+    <Folder Include="Mapping\NewMessageSentNotification Mapping\NewMessageSentNotificationMapping Queries\" />
+    <Folder Include="Mapping\Notification Mapping\Notification Mapping Commands\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="14.0.0" />
+    <PackageReference Include="FluentValidation" Version="12.0.0" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.0.0" />
+    <PackageReference Include="MediatR" Version="12.5.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
+    <PackageReference Include="Serilog.Enrichers.Environment" Version="3.0.1" />
+    <PackageReference Include="Serilog.Enrichers.Process" Version="3.0.0" />
+    <PackageReference Include="Serilog.Enrichers.Thread" Version="4.0.0" />
+    <PackageReference Include="Serilog.Settings.Configuration" Version="9.0.0" />
+    <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="8.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\SharedResource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SharedResource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>
